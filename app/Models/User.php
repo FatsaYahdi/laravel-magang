@@ -25,7 +25,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'gender',
         'role',
-        'slug',
+        'pp',
         'password',
     ];
 
@@ -55,12 +55,4 @@ class User extends Authenticatable implements MustVerifyEmail
 
     //     return $this->verification_token;
     // }
-    public static function boot()
-    {
-        parent::boot();
-
-        static::saving(function ($model) {
-            $model->slug = Str::slug($model->name);
-        });
-    }
 }

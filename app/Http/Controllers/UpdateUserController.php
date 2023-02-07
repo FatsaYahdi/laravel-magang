@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 class UpdateUserController extends Controller
 {
@@ -22,9 +23,10 @@ class UpdateUserController extends Controller
         $user = User::find($id);
         $req->validate([
             'name' => 'required|string',
-            'address' => 'required|string|',
+            'address' => 'required|string',
             'birth' => 'required|date',
             'gender' => 'required|string',
+            'pp' => 'nullable|image',
         ]);
         $data = 
         [
@@ -33,6 +35,16 @@ class UpdateUserController extends Controller
             'birth' => $req->birth,
             'gender' => $req->gender,
         ];
+        if ($req->hasFile('pp')) {
+            $pp = $req->file('pp');
+            $fileName = $pp->getClientOriginalName();
+            $pp->storeAs('public/images/', $fileName);
+
+        if ($user->pp !== null) {
+            Storage::delete('public/images/' . $user->pp);
+        }
+            $data['pp'] = $fileName;
+        }
         $user->update($data);
         return redirect('/');
     }
