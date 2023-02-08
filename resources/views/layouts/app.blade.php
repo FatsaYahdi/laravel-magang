@@ -7,18 +7,34 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name') }}</title>
+    <title>{{ config('app.name', 'Laravel') }}</title>
+
+    <!-- Fonts -->
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
     <!-- Scripts -->
-    @vite('resources/sass/app.scss')
-    @vite('resources/js/app.js')
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+
+    {{-- Admin LTE --}}
+    <link rel="stylesheet" href="{{ asset('vendor/admin-lte/adminlte.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
+    @stack('styles')
 </head>
-<body>
-    <div id="app">
-        <x-navbar></x-navbar>
-        <main class="py-4">
-            @yield('content')
-        </main>
+<body class="sidebar-mini layout-fixed">
+    <div class="wrapper">
+        @include('layouts.navbar')
+        @include('layouts.sidebar')
+        <div class="content-wrapper">
+            <section class="content-header">
+                <div class="container-fluid">
+                    @yield('content')
+                </div>
+            </section>
+        </div>
     </div>
+    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('vendor/admin-lte/adminlte.min.js') }}"></script>
+    @stack('scripts')
 </body>
 </html>

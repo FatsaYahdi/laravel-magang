@@ -1,4 +1,0 @@
-Verif email
-halaman user login
-update data user yang login : nama, tanggal lahir, jenis kelamin, alamat
-tambah data user yang login : tanggal lahir, jenis kelamin, role, alamat
