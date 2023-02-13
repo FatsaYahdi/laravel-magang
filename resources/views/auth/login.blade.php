@@ -9,6 +9,11 @@
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
+                        @if (session('warning'))
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                {{ session('warning') }}
+                            </div>
+                        @endif
                         @csrf
 
                         <div class="row mb-3">

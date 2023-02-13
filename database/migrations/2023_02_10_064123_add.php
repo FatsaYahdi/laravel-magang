@@ -14,11 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('role');
-            $table->text('address')->nullable();
-            $table->date('birth')->nullable();
-            $table->string('gender')->nullable();
-            $table->string('pp')->nullable();
+            $table->boolean('status')->default(true);
         });
     }
 
@@ -30,7 +26,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['role','address','birth','gender','pp']);
+            //
         });
     }
 };

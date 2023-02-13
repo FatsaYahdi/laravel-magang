@@ -8,7 +8,7 @@
                 <div class="card-header">{{ __('Register') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('register') }}">
                         @csrf
 
                         {{-- Name --}}
@@ -19,21 +19,6 @@
                                 <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name">
 
                                 @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        {{-- Profile Photo --}}
-                        <div class="row mb-3">
-                            <label for="pp" class="col-md-4 col-form-label text-md-end">{{ __('Photo Profile') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="pp" type="file" class="form-control @error('pp') is-invalid @enderror" name="pp" value="{{ old('pp') }}" required autocomplete="pp">
-
-                                @error('pp')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -56,75 +41,10 @@
                             </div>
                         </div>
 
-                        {{-- Address --}}
-                        <div class="row mb-3">
-                            <label for="address" class="col-md-4 col-form-label text-md-end">{{ __('Tempat Tinggal') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="address" type="text" class="form-control @error('address') is-invalid @enderror" name="address" value="{{ old('address') }}" autocomplete="address">
-
-                                @error('address')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        {{-- Birth --}}
-                        <div class="row mb-3">
-                            <label for="birth" class="col-md-4 col-form-label text-md-end">{{ __('Tanggal Lahir') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="birth" type="date" class="form-control @error('birth') is-invalid @enderror" name="birth" value="{{ old('birth') }}" autocomplete="birth">
-
-                                @error('birth')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        {{-- Gender --}}
-                        <div class="row mb-3">
-                            <label for="gender" class="col-md-4 col-form-label text-md-end">{{ __('Jenis Kelamin') }}</label>
-
-                            <div class="col-md-6">
-                                <select id="gender" name="gender" class="form-control @error('gender') is-invalid @enderror">
-                                    <option value="" disabled hidden selected>Pilih Jenis</option>
-                                    <option value="man">Pria</option>
-                                    <option value="woman">Wanita</option>
-                                    <option value="other">Privasi</option>
-                                </select>
-
-                                @error('gender')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-                        
-                        {{-- Role --}}
-                        <div class="row mb-3">
-                            <label for="role" class="col-md-4 col-form-label text-md-end">{{ __('Role') }}</label>
-
-                            <div class="col-md-6">
-                                <select id="role" name="role" class="form-control @error('role') is-invalid @enderror">
-                                    <option value="" disabled hidden selected>Pilih Role</option>
-                                    <option value="admin" disabled>Admin</option>
-                                    <option value="user">User</option>
-                                </select>
-
-                                @error('role')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
+                        <input type="hidden" name="role" value="admin" id="role">
+                        <input type="hidden" name="birth" value="{{ now()->toDateTimeString() }}" id="role">
+                        <input type="hidden" name="address" value=" " id="address"> 
+                        <input type="hidden" name="gender" value="secret" id="gender">
 
                         {{-- Password --}}
                         <div class="row mb-3">

@@ -87,6 +87,10 @@
                                             {{ old('gender', auth()->user()->gender) === "woman" ? 'selected' : '' }}
                                             value="woman"
                                         >Wanita</option>
+                                        <option
+                                            {{ old('gender', auth()->user()->gender) === 'secret' ? 'selected' : '' }}
+                                            value="secret"
+                                        >Rahasia</option>
                                     </select>
 
                                     @error('gender')

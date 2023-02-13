@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
 class MyProfileController extends Controller
 {
     public function index()
     {
+        $gender = Auth::user()->gender;
+        Session::flash('gender', $gender);
         return view('my-profile.index');
     }
     public function update(Request $request)
@@ -19,9 +22,9 @@ class MyProfileController extends Controller
         $user = User::find($id);
         $request->validate([
             'name' => 'required|string|min:3',
-            'address' => 'required|string|min:3',
-            'birth' => 'required|date',
-            'gender' => 'required|string',
+            'address' => 'nullable|string|min:3',
+            'birth' => 'nullable|date',
+            'gender' => 'nullable|string',
             'pp' => 'nullable|image',
         ]);
         $data = 

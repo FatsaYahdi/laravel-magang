@@ -1,39 +1,23 @@
-<style>
-    #no {
-        text-align: center
-    }
-    th {
-        padding-top: 5px;
-        padding-bottom: 5px;
-    }
-</style>
 @extends('layouts.app',['title' => 'Show'])
 
 @section('content')
-        <table class="table table-striped">
-            <thead>
-                <th width="5%" id="no">No</th>
-                <th width="20%">Nama</th>
-                <th width="10%">Jenis Kelamin</th>
-                <th width="10%">Tanggal Lahir</th>
-            <th width="20%">Aksi</th>
-        </thead>
-        @foreach ($users as $item)
-        <tbody>
-            <td align="center">{{ $loop->iteration }}</td>
-            <td>{{ $item->name }}</td>
-            <td>{{ $item->gender }}</td>
-            <td>{{ $item->birth }}</td>
-            <td>
-                <form action="{{ route('show.destroy',$item->id) }}" method="post">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" style="border:none; background: none;" class="text-danger text-bold">Delete</button>
-                </form>
-            </td>
-        </tbody>
-        @endforeach
-    </table>
-
+<div class="d-flex container">
+    @if ($user->pp == null)
+        <img src="{{ asset('/images/null.jfif') }}" class="rounded-circle d-block flex-fill mr-4" style="width: 15%">
+    @else
+        <img src="{{ asset('/storage/images/'.$user->pp) }}" class="rounded-circle d-block flex-fill">
+    @endif
+    <div class="flex-fill pt-5">
+        <h5>Id : {{ $user->id }}</h3>
+        <h5>Username : {{ $user->name }}</h3>
+        <h5>Email : {{ $user->email }}</h3>
+        <h5>Role : {{ $user->role }}</h3>
+    </div>
+    <div class="flex-fill pt-5">
+        <h5>Address : {{ $user->address }}</h5>
+        <h5>Birth : {{ $user->birth }}</h5>
+        <h5>Gender : {{ $user->gender }}</h5>
+        <h5>Status : {{ $user->status ? 'Active' : 'Inactive' }}</h5>
+    </div>
+</div>
 @endsection
-{{-- Buat menu `user`, yang berisi table dengan data semua user. Data yang di tampilkan di table berupa `no`, `nama`, `jenis kelamin`, `tanggal lahir`, `aksi`. Di dalam kolom `aksi` silakan di isi dengan tombol `hapus user`. --}}

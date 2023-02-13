@@ -3,20 +3,32 @@
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MyProfileController;
 use App\Http\Controllers\ShowController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\UpdateUserController;
 use Illuminate\Support\Facades\{Route, Auth};
 
 Auth::routes(['verify' => true]);
-
-Route::get('/', HomeController::class)->name('home');
 Route::get('verify/{token}', 'VerificationController@verify')->name('verify')->middleware('verified');
 
-// Route::get('/update/users/{id}',[UpdateUserController::class, 'edit'])->name('edit');
-// Route::post('/update/users/submit',[UpdateUserController::class, 'update']);
+Route::middleware(['auth','verified','actived'])->group(function () {
+    Route::prefix('my-profile')->controller(MyProfileController::class)->group(function() {
+        Route::get('/', 'index')->name('my.profile.index');
+        Route::put('/', 'update')->name('my.profile.update');
+    });
 
-Route::prefix('my-profile')->middleware(['auth', 'verified'])->group(function() {
-    Route::get('/', [MyProfileController::class, 'index'])->name('my.profile.index');
-    Route::put('/', [MyProfileController::class, 'update'])->name('my.profile.update');
+    Route::get('/', HomeController::class)->name('home');
+
+    Route::get('/show/{id}',[ShowController::class, 'show'])->name('show');
+    // Route::delete('show/{id}', [ShowController::class, 'destroy'])->name('show.destroy');
+
+    Route::prefix('user')->middleware('roled')->group(function () {
+        Route::controller(UserController::class)->group(function () {
+            Route::get('/', 'index')->name('user.index');
+            Route::get('/list', 'list')->name('user.list');
+            Route::delete('/{user}', 'delete')->name('user.delete');
+        }
+        );
+    });
 });
-Route::get('show',[ShowController::class, 'show'])->name('show');
-Route::delete('show/{id}', [ShowController::class, 'destroy'])->name('show.destroy');
+
+

@@ -8,20 +8,20 @@ use Illuminate\Support\Facades\File;
 
 class ShowController extends Controller
 {
-    public function show()
+    public function show($id)
     {
-        $users = User::all();
-        return view('show',compact('users'));
+        $user = User::findOrFail($id);
+        return view('show',compact('user'));
     }
-    public function destroy($id)
-    {
-        $item = User::findOrFail($id);
-        $path = public_path('storage/images/'.$item->pp);
-        if(File::exists($path)) {
-            File::delete($path);
-        }
-        $item->delete();
+    // public function destroy($id)
+    // {
+    //     $item = User::findOrFail($id);
+    //     $path = public_path('storage/images/'.$item->pp);
+    //     if(File::exists($path)) {
+    //         File::delete($path);
+    //     }
+    //     $item->delete();
 
-        return redirect('/');
-    }
+    //     return redirect('/');
+    // }
 }

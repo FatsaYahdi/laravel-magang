@@ -23,9 +23,9 @@ class UpdateUserController extends Controller
         $user = User::find($id);
         $req->validate([
             'name' => 'required|string',
-            'address' => 'required|string',
-            'birth' => 'required|date',
-            'gender' => 'required|string',
+            'address' => 'nullable|string',
+            'birth' => 'nullable|date',
+            'gender' => 'nullable|string',
             'pp' => 'nullable|image',
         ]);
         $data = 
