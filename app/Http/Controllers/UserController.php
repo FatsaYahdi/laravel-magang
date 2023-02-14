@@ -24,7 +24,7 @@ class UserController extends Controller
                     </button>
                 </form>
                 
-                <a href="' . route('show', $user->id) . '" class="btn btn-sm btn-info mx-2">
+                <a href="' . route('show.show', $user->id) . '" class="btn btn-sm btn-info mx-2">
                     <i class="fa fa-eye"></i>
                 </a>
                 </div>
@@ -36,8 +36,8 @@ class UserController extends Controller
                     : '<img src="' . asset('/images/null.jfif') . '" width="50px" class="rounded-circle">';
             })
             ->addColumn('status', function ($user) {
-                $status =  $user->status ? 'Active' : 'Inactive';
-                $class = $user->status ? 'badge-success' : 'badge-danger';
+                $status =  ($user->status =='active' ) ? 'Active' : 'Inactive';
+                $class = ($user->status =='active' ) ? 'badge-success' : 'badge-danger';
                 return '<span class="badge ' . $class . '">' . $status . '</span>';
             })
             ->addIndexColumn()

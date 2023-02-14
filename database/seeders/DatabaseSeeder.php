@@ -26,7 +26,8 @@ class DatabaseSeeder extends Seeder
             'gender' => 'secret',
             'role' => 'superadmin',
             'pp' => "",
-            'address' => ''
+            'address' => '',
+            'status' => 'active'
         ]);
     }
 }

@@ -27,18 +27,10 @@
                 </li>
                 @if(Auth::user()->role == "superadmin")
                 <li class="nav-item">
-                    <a href="/user" class="nav-link {{ Route::is('user.index') ? 'active' : '' }}">
+                    <a href="/user" class="nav-link {{ (Route::is('user.index') || Route::is('show.show')) ? 'active' : '' }}">
                         <i class="nav-icon fa fa-users"></i>
                         <p>
                             User
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ Route::is('show') ? 'active' : '' }}">
-                        <i class="nav-icon fa fa-user"></i>
-                        <p>
-                            Show
                         </p>
                     </a>
                 </li>

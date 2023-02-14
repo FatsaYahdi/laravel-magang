@@ -17,7 +17,7 @@ class CheckActive
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->check() && auth()->user()->status == 0) {
+        if (auth()->check() && auth()->user()->status == 'inactive') {
             auth()->logout();
             return redirect()->route('login')->with('warning','Akun anda tidak aktif.');
         }

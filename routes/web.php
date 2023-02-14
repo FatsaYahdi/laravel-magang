@@ -18,8 +18,9 @@ Route::middleware(['auth','verified','actived'])->group(function () {
 
     Route::get('/', HomeController::class)->name('home');
 
-    Route::get('/show/{id}',[ShowController::class, 'show'])->name('show');
-    // Route::delete('show/{id}', [ShowController::class, 'destroy'])->name('show.destroy');
+    Route::get('/show/{id}',[ShowController::class, 'show'])->name('show.show');
+    Route::put('/show/{id}',[ShowController::class, 'update'])->name('show.update');
+    
 
     Route::prefix('user')->middleware('roled')->group(function () {
         Route::controller(UserController::class)->group(function () {

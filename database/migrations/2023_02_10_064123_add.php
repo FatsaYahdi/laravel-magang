@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('status')->default(true);
+            $table->enum('status',['active','inactive']);
         });
     }
 
