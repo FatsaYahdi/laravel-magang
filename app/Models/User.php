@@ -39,20 +39,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'status' => 'active'
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
 
-    // public function generateVerificationToken()
-    // {
-    //     $this->verification_token = Str::random(40);
-    //     $this->save();
-
-    //     return $this->verification_token;
-    // }
+    public function tags()
+    {
+        return $this->hasMany(Tag::class);
+    }
 }

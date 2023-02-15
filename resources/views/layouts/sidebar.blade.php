@@ -6,7 +6,7 @@
 
             @if(Auth::user())
                 <div class="info">
-                    <a href="{{ route('my.profile.index') }}" class="">{{ auth()->user()->name }}</a>
+                    <a href="{{ route('my.profile.index') }}">{{ auth()->user()->name }}</a>
                 </div>
             @endif
         </div>
@@ -25,6 +25,29 @@
                         </p>
                     </a>
                 </li>
+                <li class="nav-item {{ (Route::is('tag.index') || Route::is('tag.create') || Route::is('tag.edit')) ? 'menu-open' : '' }}">
+                    <a class="nav-link {{ Request::is('tag*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                        Tag
+                        <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                        <a href="{{ route('tag.index') }}" class="nav-link {{ (Route::is('tag.index') || Route::is('tag.edit')) ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>List</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('tag.create') }}" class="nav-link {{ Route::is('tag.create')  ? 'active' : '' }}">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Create</p>
+                        </a>
+                    </li>
+                </li>
+            </ul>
                 @if(Auth::user()->role == "superadmin")
                 <li class="nav-item">
                     <a href="/user" class="nav-link {{ (Route::is('user.index') || Route::is('show.show')) ? 'active' : '' }}">
@@ -35,7 +58,7 @@
                     </a>
                 </li>
                 @endif
-            </ul>
+            
         </nav>
         <!-- /.sidebar-menu -->
     </div>

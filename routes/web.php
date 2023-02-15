@@ -3,6 +3,7 @@
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MyProfileController;
 use App\Http\Controllers\ShowController;
+use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UpdateUserController;
 use Illuminate\Support\Facades\{Route, Auth};
@@ -30,6 +31,18 @@ Route::middleware(['auth','verified','actived'])->group(function () {
         }
         );
     });
+    Route::prefix('tag')->group(function () {
+        Route::controller(TagController::class)->group(function () {
+            Route::get('/','index')->name('tag.index'); // show
+            Route::get('/list','list')->name('tag.list'); 
+            Route::get('/create','create')->name('tag.create'); // create
+            Route::put('/create','store')->name('tag.store'); // store create
+            Route::get('/{tag}','edit')->name('tag.edit'); // edit
+            Route::put('/{tag}','update')->name('tag.update'); // update
+            Route::delete('/{tag}','destroy')->name('tag.destroy'); // delete
+        });
+    });
+
 });
 
 
