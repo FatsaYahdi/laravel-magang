@@ -18,6 +18,7 @@ class ShowController extends Controller
 
     public function update(Request $request,User $id)
     {
+        $find = User::findOrFail($id->id);
         $request->validate(
             [
                 'name' => 'string',
@@ -25,30 +26,30 @@ class ShowController extends Controller
                 'gender' => 'string|nullable',
                 'address' => 'string|nullable',
                 'pp' => 'nullable',
-                'status' => 'string',
             ],
         );
 
-
-        $imgName = '';
-        if ($request->file('pp')) {
-            $imgName = $request->file('pp')->getClientOriginalExtension();
-
-            $request->file('pp')->storeAs('public/images/', $imgName);
-        }
-
         $data =
             [
-                'pp' => $imgName,
                 'name' => $request->name,
                 'birth' => $request->birth,
                 'gender' => $request->gender,
                 'address' => $request->address,
                 'role' => $request->role,
-                'status' => $request->status,
             ];
-           $find = User::findOrFail($id->id);
-           $find->update($data);
+
+            if ($request->hasFile('pp')) {
+                $pp = $request->file('pp');
+                $imgName = $pp->getClientOriginalName();
+                $pp->storeAs('public/images/', $imgName);
+    
+                if ($find->pp !== null) {
+                    Storage::delete('public/images/' . $find->pp);
+                }
+                $data['pp'] = $imgName;
+            }
+        
+        $find->update($data);
 
           return redirect('/user');
     }

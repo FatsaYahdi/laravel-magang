@@ -12,7 +12,7 @@ class UserController extends Controller
     public function list()
     {
         return datatables()
-            ->eloquent(User::query())
+            ->eloquent(User::query()->where('role','!=','superadmin')->latest())
             ->addColumn('action', function ($user) {
                 return '
                 <div class="d-flex">
@@ -25,7 +25,7 @@ class UserController extends Controller
                 </form>
                 
                 <a href="' . route('show.show', $user->id) . '" class="btn btn-sm btn-info mx-2">
-                    <i class="fa fa-eye"></i>
+                    <i class="fa fa-pen"></i>
                 </a>
                 </div>
                 ';

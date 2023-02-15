@@ -41,29 +41,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            {{-- Status --}}
-                            <div class="row mb-3">
-                                <label
-                                    for="status"
-                                    class="col-md-4 col-form-label text-md-end"
-                                >{{ __('Status') }}</label>
-
-                                <div class="col-md-6">
-                                    <select name="status" id="status" class="form-control @error('status') is-invalid @enderror">
-                                        <option value="active" {{ ($user->status === 'active') ? 'selected' : '' }}>Active</option>
-                                        <option value="inactive" {{ ($user->status === 'inactive') ? 'selected' : '' }}>Inactive</option>
-                                    </select>
-
-                                    @error('status')
-                                        <span
-                                            class="invalid-feedback"
-                                            role="alert"
-                                        >
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
+                            
                             {{-- Tanggal Lahir --}}
                             <div class="row mb-3">
                                 <label
