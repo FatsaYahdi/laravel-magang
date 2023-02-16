@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MyProfileController;
 use App\Http\Controllers\ShowController;
@@ -41,6 +42,16 @@ Route::middleware(['auth','verified','actived'])->group(function () {
             Route::put('/{tag}','update')->name('tag.update'); // update
             Route::delete('/{tag}','destroy')->name('tag.destroy'); // delete
         });
+    });
+
+    Route::prefix('category')->controller(CategoryController::class)->group(function () {
+            Route::get('/','index')->name('category.index');
+            Route::get('/list','list')->name('category.list');
+            Route::get('/create','create')->name('category.create');
+            Route::put('/create','store')->name('category.store');
+            Route::get('/{category}','edit')->name('category.edit');
+            Route::put('/{category}','update')->name('category.update');
+            Route::delete('/{category}','destroy')->name('category.destroy');
     });
 
 });

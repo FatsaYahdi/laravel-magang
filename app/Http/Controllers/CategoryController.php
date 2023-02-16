@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tag;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class TagController extends Controller
+class CategoryController extends Controller
 {
     public function index()
     {
-        return view('tag.index');
+        return view('category.index');
     }
     public function list()
     {
         return datatables()
-            ->eloquent(Tag::query()->latest())
-            ->addColumn('action', function ($tag) {
+            ->eloquent(Category::query()->latest())
+            ->addColumn('action', function ($category) {
                 return '
                 <div class="d-flex">
-                <form action="' . route('tag.destroy', $tag->id) . '" method="POST">
+                <form action="' . route('category.destroy', $category->id) . '" method="POST">
                     <input type="hidden" name="_token" value="' . @csrf_token() . '">
                     <input type="hidden" name="_method" value="DELETE">
                     <button class="btn btn-sm btn-danger" onclick="return confirm(\'Apakah anda yakin ingin menghapus?\');">
@@ -27,14 +27,14 @@ class TagController extends Controller
                     </button>
                 </form>
                 
-                <a href="' . route('tag.edit', $tag->id) . '" class="btn btn-sm btn-info mx-2">
+                <a href="' . route('category.edit', $category->id) . '" class="btn btn-sm btn-primary mx-2">
                     <i class="fa fa-pen"></i>
                 </a>
                 </div>
                 ';
             })
             ->addColumn('name', function ($users) {
-                return $users->tag;
+                return $users->category;
             })
             ->addColumn('created_by', function ($users) {
                 return $users->created_by;
@@ -46,49 +46,49 @@ class TagController extends Controller
 
     public function create()
     {
-        return view('tag.create');
+        return view('category.create');
     }
 
     
     public function store(Request $request)
     {
         $request->validate([
-            'tag' => 'string|required|min:3',
+            'category' => 'string|required|min:3',
         ]);
         $data = [
-            'tag' => $request->tag,
+            'category' => $request->category,
             'created_by' => Auth::user()->name,
         ];
-        $tag = Tag::create($data);
-        return redirect('/tag')->with('success','Tag Berhasil dibuat.');
+        $category = Category::create($data);
+        return redirect('/category')->with('success','Category Berhasil dibuat.');
     }
 
     
 
     public function edit($id)
     {
-        $tag = Tag::find($id);
-        return view('tag.edit',compact('tag'));
+        $category = Category::find($id);
+        return view('category.edit',compact('category'));
     }
 
     
-    public function update(Request $request, Tag $tag)
+    public function update(Request $request, Category $category)
     {
         $request->validate([
-            'tag' => 'required|string'
+            'category' => 'required|string'
         ]);
         $data = [
-            'tag' => $request->tag,
+            'category' => $request->category,
             'created_by' => $request->created_by
         ];
-        $find = Tag::find($tag->id);
+        $find = Category::find($category->id);
         $find->update($data);
-        return redirect('/tag')->with('success','Tag Berhasil Di Update.');
+        return redirect('/category')->with('success','Category Berhasil Di Update.');
     }
 
-    public function destroy(Tag $tag)
+    public function destroy(Category $category)
     {
-        $tag->delete();
-        return redirect('/tag')->with('success','Tag Berhasil Dihapus.');
+        $category->delete();
+        return redirect('/category')->with('success','Category Berhasil Dihapus.');
     }
 }

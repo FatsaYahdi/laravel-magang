@@ -15,8 +15,7 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
+                {{-- Home --}}
                <li class="nav-item">
                     <a href="{{ route('home') }}" class="nav-link {{ Route::is('home') ? 'active' : '' }}">
                         <i class="nav-icon fa fa-home"></i>
@@ -25,9 +24,11 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item {{ (Route::is('tag.index') || Route::is('tag.create') || Route::is('tag.edit')) ? 'menu-open' : '' }}">
-                    <a class="nav-link {{ Request::is('tag*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
+
+                {{-- Tag --}}
+                <li class="nav-item {{ Request::is('tag*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ Request::is('tag*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-tag"></i>
                         <p>
                         Tag
                         <i class="right fas fa-angle-left"></i>
@@ -46,8 +47,33 @@
                             <p>Create</p>
                         </a>
                     </li>
+                    </ul>
                 </li>
-            </ul>
+
+                {{-- Category --}}
+                <li class="nav-item {{ Request::is('category*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ Request::is('category*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-list"></i>
+                        <p>
+                        Category
+                        <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                        <a href="{{ route('category.index') }}" class="nav-link {{ (Route::is('category.index') || Route::is('category.edit')) ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>List</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('category.create') }}" class="nav-link {{ Route::is('category.create')  ? 'active' : '' }}">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Create</p>
+                        </a>
+                    </li>
+                    </ul>
+                </li>
                 @if(Auth::user()->role == "superadmin")
                 <li class="nav-item">
                     <a href="/user" class="nav-link {{ (Route::is('user.index') || Route::is('show.show')) ? 'active' : '' }}">
@@ -58,7 +84,7 @@
                     </a>
                 </li>
                 @endif
-            
+            </ul>
         </nav>
         <!-- /.sidebar-menu -->
     </div>
