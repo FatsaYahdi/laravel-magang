@@ -8,13 +8,12 @@
 @if(session('success'))
 <div class="container-fluid">
     <div class="row">
-        <div class="alert alert-success" role="aler">
+        <div class="alert alert-success" role="alert">
             {{ session('success') }}
         </div>
     </div>
 </div>
 @endif
-
 <div class="container">
     <div class="row justify-content-center">
         <div class="col">
@@ -24,11 +23,9 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Profile</th>
-                                <th>Nama</th>
-                                <th>Email</th>
-                                <th>Status</th>
-                                <th width="10%">Aksi</th>
+                                <th>Title</th>
+                                <th>Created By</th>
+                                <th width="10%">Action</th>
                             </tr>
                         </thead>
                     </table>
@@ -49,14 +46,12 @@
             userDataTable = $('table').DataTable({
                 processing: false,
                 serverSide: true,
-                ajax: "{{ route('user.list') }}",
+                ajax: "{{ route('post.list') }}",
                 order: [],
                 columns: [
-                    { data: 'DT_RowIndex', sortable: false, searchable: false },
-                    { data: 'pp' , sortable:false, searchable: false},
-                    { data: 'name' },
-                    { data: 'email' },
-                    { data: 'status' },
+                    { data: 'DT_RowIndex',sortable: false, searchable: false},
+                    { data: 'title' },
+                    { data: 'created_by' },
                     { data: 'action', sortable: false },
                 ],
             });

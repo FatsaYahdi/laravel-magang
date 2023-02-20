@@ -10,6 +10,7 @@
                 <div class="card-body">
                     <form method="POST" action="/update/users/submit" enctype="multipart/form-data">
                         @csrf
+                        @honeypot
 
                         {{-- Name --}}
                         <div class="row mb-3">
@@ -141,5 +142,3 @@
     </div>
 </div>
 @endsection
-
-{{-- nama tanggal lahir jk alamat --}}

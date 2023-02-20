@@ -12,17 +12,19 @@ class CategoryController extends Controller
     {
         return view('category.index');
     }
-    public function list()
+    public function list(Request $req)
     {
         return datatables()
-            ->eloquent(Category::query()->latest())
+            ->eloquent(Category::query()->when(!$req->order, function ($query) {
+                $query->latest();
+            }))
             ->addColumn('action', function ($category) {
                 return '
                 <div class="d-flex">
-                <form action="' . route('category.destroy', $category->id) . '" method="POST">
+                <form onsubmit="destroy(event)" action="' . route('category.destroy', $category->id) . '" method="POST">
                     <input type="hidden" name="_token" value="' . @csrf_token() . '">
                     <input type="hidden" name="_method" value="DELETE">
-                    <button class="btn btn-sm btn-danger" onclick="return confirm(\'Apakah anda yakin ingin menghapus?\');">
+                    <button class="btn btn-sm btn-danger">
                         <i class="fa fa-trash"></i>
                     </button>
                 </form>
@@ -33,11 +35,11 @@ class CategoryController extends Controller
                 </div>
                 ';
             })
-            ->addColumn('name', function ($users) {
-                return $users->category;
+            ->editColumn('category', function ($user) {
+                return $user->category;
             })
-            ->addColumn('created_by', function ($users) {
-                return $users->created_by;
+            ->editColumn('created_by', function ($user) {
+                return $user->created_by;
             })
             ->addIndexColumn()
             ->escapeColumns(['action'])
@@ -54,10 +56,12 @@ class CategoryController extends Controller
     {
         $request->validate([
             'category' => 'string|required|min:3',
+            'description' => 'string|nullable',
         ]);
         $data = [
             'category' => $request->category,
             'created_by' => Auth::user()->name,
+            'description' => $request->description,
         ];
         $category = Category::create($data);
         return redirect('/category')->with('success','Category Berhasil dibuat.');
@@ -75,11 +79,13 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $request->validate([
-            'category' => 'required|string'
+            'category' => 'required|string',
+            'description' => 'nullable|string',
         ]);
         $data = [
             'category' => $request->category,
-            'created_by' => $request->created_by
+            'created_by' => $request->created_by,
+            'description' => $request->description
         ];
         $find = Category::find($category->id);
         $find->update($data);

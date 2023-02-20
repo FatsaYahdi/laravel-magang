@@ -26,7 +26,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'gender',
         'role',
         'pp',
-        'address'
+        'address',
+        'status'
     ];
 
     protected $hidden = [
@@ -36,7 +37,6 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $attributes = [
         'pp' => '',
         'role' => 'admin',
-        'status' => 'active'
     ];
 
     protected $casts = [

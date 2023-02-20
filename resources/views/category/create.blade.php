@@ -11,6 +11,7 @@
                     <form method="POST" action="{{ route('category.store') }}">
                         @csrf
                         @method('put')
+                        @honeypot
                         <div class="row mb-3">
                             <label for="category" class="col-md-2 col-form-label text-center">{{ __('Category Name') }}</label>
 
@@ -18,6 +19,19 @@
                                 <input id="category" type="text" class="form-control @error('category') is-invalid @enderror" name="category" value="{{ old('category') }}" autocomplete="category">
 
                                 @error('category')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="description" class="col-md-2 col-form-label text-center">{{ __('Description') }}</label>
+
+                            <div class="col-md-10">
+                                <textarea id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" autocomplete="description">{{ old('description') }}</textarea>
+
+                                @error('description')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

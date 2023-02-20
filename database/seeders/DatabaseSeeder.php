@@ -18,25 +18,17 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'superadmin',
-            'email' => 'superadmin@gmail.com',
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'birth' => now()->toDateTimeString(),
-            'gender' => 'secret',
-            'role' => 'superadmin',
-            'pp' => "",
-            'address' => '',
-            'status' => 'active'
-        ]);
+        // User::factory()->create([
+        //     'name' => 'superadmin',
+        //     'email' => 'superadmin@gmail.com',
+        //     'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+        //     'birth' => now()->toDateTimeString(),
+        //     'gender' => 'secret',
+        //     'role' => 'superadmin',
+        //     'pp' => "",
+        //     'address' => '',
+        //     'status' => 'active'
+        // ]);
+        $this->call(UserSeeder::class);
     }
 }
-
-// 'name',
-// 'email',
-// 'password',
-// 'birth',
-// 'gender',
-// 'role',
-// 'pp',
-// 'address'

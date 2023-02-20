@@ -129,13 +129,13 @@
                                 </div>
                             </div>
                             {{-- images --}}
-                            <div class="row mb-3">
+                            <div class="row mb-2">
                                 <label
                                     for="pp"
                                     class="col-md-4 col-form-label text-md-end"
                                 >{{ __('Foto') }}</label>
                                 <div class="col-md-6">
-                                    <div class="input-group mb-3">
+                                    <div class="input-group mb-1">
                                         <div>
                                             <input
                                                 name="pp"
@@ -144,11 +144,9 @@
                                                 type="file"
                                                 accept="image/*"
                                                 id="formFile"
+                                                onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])"
                                             >
-                                            <small
-                                                for="formFile"
-                                                class="form-label"
-                                            >Silahkan Upload Foto Anda</small>
+                                                <img src="" class="output mt-2" id="output" width="150px">
                                         </div>
                                     </div>
                                     @error('pp')

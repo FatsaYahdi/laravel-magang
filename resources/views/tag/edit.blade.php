@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -11,13 +10,27 @@
                     <form method="POST" action="{{ route('tag.update',$tag->id) }}">
                         @csrf
                         @method('put')
+                        @honeypot
                         <div class="row mb-3">
-                            <label for="tag" class="col-md-1 col-form-label text-center">{{ __('Tag') }}</label>
+                            <label for="tag" class="col-md-2 col-form-label text-center">{{ __('Edit Tag') }}</label>
 
-                            <div class="col-md-11">
+                            <div class="col-md-10">
                                 <input id="tag" type="text" class="form-control @error('tag') is-invalid @enderror" name="tag" value="{{ $tag->tag }}" autocomplete="tag">
 
                                 @error('tag')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="description" class="col-md-2 col-form-label text-center">{{ __('Description') }}</label>
+
+                            <div class="col-md-10">
+                                <textarea id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" autocomplete="description">{{ old('description',$tag->description) }}</textarea>
+
+                                @error('description')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

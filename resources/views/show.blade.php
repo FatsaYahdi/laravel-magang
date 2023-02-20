@@ -15,6 +15,7 @@
                         >
                             @method('put')
                             @csrf
+                            @honeypot
                             {{-- Name --}}
                             <div class="row mb-3">
                                 <label
@@ -105,6 +106,38 @@
                                     @enderror
                                 </div>
                             </div>
+                            {{-- Status --}}
+                            <div class="row mb-3">
+                                <label
+                                    for="status"
+                                    class="col-md-4 col-form-label text-md-end"
+                                >{{ __('Status') }}</label>
+
+                                <div class="col-md-6">
+                                    <select
+                                        class="form-control @error('status') is-invalid @enderror"
+                                        name="status"
+                                    >
+                                        <option
+                                            {{ ($user->status == "active") ? 'selected' : '' }}
+                                            value="active"
+                                        >Active</option>
+                                        <option
+                                            {{ ($user->status == "inactive") ? 'selected' : '' }}
+                                            value="inactive"
+                                        >Inactive</option>
+                                    </select>
+
+                                    @error('status')
+                                        <span
+                                            class="invalid-feedback"
+                                            role="alert"
+                                        >
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
                             {{-- Alamat --}}
                             <div class="row mb-3">
                                 <label
@@ -131,7 +164,7 @@
                                 </div>
                             </div>
                             {{-- images --}}
-                            <div class="row mb-3">
+                            <div class="row mb-1">
                                 <label
                                     for="pp"
                                     class="col-md-4 col-form-label text-md-end"
@@ -146,11 +179,9 @@
                                                 type="file"
                                                 accept="image/*"
                                                 id="formFile"
-                                            >
-                                            <small
-                                                for="formFile"
-                                                class="form-label"
-                                            >Silahkan Upload Foto Anda</small>
+                                                onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])"
+                                                >
+                                            <img src="" class="output mt-2" id="output" width="150px">
                                         </div>
                                     </div>
                                     @error('pp')

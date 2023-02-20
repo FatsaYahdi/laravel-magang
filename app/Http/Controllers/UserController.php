@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -16,10 +17,10 @@ class UserController extends Controller
             ->addColumn('action', function ($user) {
                 return '
                 <div class="d-flex">
-                <form action="' . route('user.delete', $user->id) . '" method="POST">
+                <form onsubmit="destroy(event)" action="' . route('user.delete', $user->id) . '" method="POST">
                     <input type="hidden" name="_token" value="' . @csrf_token() . '">
                     <input type="hidden" name="_method" value="DELETE">
-                    <button class="btn btn-sm btn-danger" onclick="return confirm(\'Apakah anda yakin ingin menghapus?\');">
+                    <button class="btn btn-sm btn-danger">
                         <i class="fa fa-trash"></i>
                     </button>
                 </form>
@@ -36,7 +37,7 @@ class UserController extends Controller
                     : '<img src="' . asset('/images/null.jfif') . '" width="50px" class="rounded-circle">';
             })
             ->addColumn('status', function ($user) {
-                $status =  ($user->status =='active' ) ? 'Active' : 'Inactive';
+                $status =  ($user->status =='active' ) ? 'Active' : 'Blocked';
                 $class = ($user->status =='active' ) ? 'badge-success' : 'badge-danger';
                 return '<span class="badge ' . $class . '">' . $status . '</span>';
             })
@@ -52,11 +53,8 @@ class UserController extends Controller
 
     public function delete(User $user)
     {
-        $userDelete = $user->delete();
-        if ($userDelete) {
-            Session::flash('success','Berhasil Menghapus Data');
-        }
+        $user->delete();
+        Storage::delete('public/images/',$user->pp);
         return redirect('user');
     }
 }
-?>

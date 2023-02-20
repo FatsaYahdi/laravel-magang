@@ -34,25 +34,28 @@
         </div>
     </div>
 </div>
+@include('includes.modal-delete')
 @endsection
 
 @push('scripts')
     <script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('vendor/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
     <script>
+        let userDataTable;
         $(document).ready(function () {
-            $('table').DataTable({
+            userDataTable = $('table').DataTable({
                 processing: false,
                 serverSide: true,
                 ajax: "{{ route('tag.list') }}",
                 order: [],
                 columns: [
                     { data: 'DT_RowIndex',sortable: false, searchable: false},
-                    { data: 'name' },
+                    { data: 'tag' },
                     { data: 'created_by' },
                     { data: 'action', sortable: false },
                 ],
             });
         });
     </script>
+    <script src="{{ asset('js/delete.js') }}"></script>
 @endpush

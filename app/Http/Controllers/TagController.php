@@ -19,10 +19,10 @@ class TagController extends Controller
             ->addColumn('action', function ($tag) {
                 return '
                 <div class="d-flex">
-                <form action="' . route('tag.destroy', $tag->id) . '" method="POST">
+                <form onsubmit="destroy(event)" action="' . route('tag.destroy', $tag->id) . '" method="POST">
                     <input type="hidden" name="_token" value="' . @csrf_token() . '">
                     <input type="hidden" name="_method" value="DELETE">
-                    <button class="btn btn-sm btn-danger" onclick="return confirm(\'Apakah anda yakin ingin menghapus?\');">
+                    <button class="btn btn-sm btn-danger">
                         <i class="fa fa-trash"></i>
                     </button>
                 </form>
@@ -33,11 +33,11 @@ class TagController extends Controller
                 </div>
                 ';
             })
-            ->addColumn('name', function ($users) {
-                return $users->tag;
+            ->editColumn('tag', function ($user) {
+                return $user->tag;
             })
-            ->addColumn('created_by', function ($users) {
-                return $users->created_by;
+            ->editColumn('created_by', function ($user) {
+                return $user->created_by;
             })
             ->addIndexColumn()
             ->escapeColumns(['action'])
@@ -54,9 +54,11 @@ class TagController extends Controller
     {
         $request->validate([
             'tag' => 'string|required|min:3',
+            'description' => 'string|nullable',
         ]);
         $data = [
             'tag' => $request->tag,
+            'description' => $request->description,
             'created_by' => Auth::user()->name,
         ];
         $tag = Tag::create($data);
@@ -75,10 +77,12 @@ class TagController extends Controller
     public function update(Request $request, Tag $tag)
     {
         $request->validate([
-            'tag' => 'required|string'
+            'tag' => 'required|string',
+            'description' => 'nullable|string'
         ]);
         $data = [
             'tag' => $request->tag,
+            'description' => $request->description,
             'created_by' => $request->created_by
         ];
         $find = Tag::find($tag->id);

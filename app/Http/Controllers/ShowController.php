@@ -26,6 +26,7 @@ class ShowController extends Controller
                 'gender' => 'string|nullable',
                 'address' => 'string|nullable',
                 'pp' => 'nullable',
+                'status' => 'required|string'
             ],
         );
 
@@ -36,6 +37,7 @@ class ShowController extends Controller
                 'gender' => $request->gender,
                 'address' => $request->address,
                 'role' => $request->role,
+                'status' => $request->status,
             ];
 
             if ($request->hasFile('pp')) {
@@ -48,9 +50,8 @@ class ShowController extends Controller
                 }
                 $data['pp'] = $imgName;
             }
-        
         $find->update($data);
-
+        // dd($data);
           return redirect('/user');
     }
 }

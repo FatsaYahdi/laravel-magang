@@ -28,7 +28,7 @@
                 {{-- Tag --}}
                 <li class="nav-item {{ Request::is('tag*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ Request::is('tag*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-tag"></i>
+                        <i class="nav-icon fas fa-tags"></i>
                         <p>
                         Tag
                         <i class="right fas fa-angle-left"></i>
@@ -37,13 +37,13 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                         <a href="{{ route('tag.index') }}" class="nav-link {{ (Route::is('tag.index') || Route::is('tag.edit')) ? 'active' : '' }}">
-                        <i class="far fa-circle nav-icon"></i>
+                        <i class="fas fa-link nav-icon"></i>
                         <p>List</p>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('tag.create') }}" class="nav-link {{ Route::is('tag.create')  ? 'active' : '' }}">
-                            <i class="far fa-circle nav-icon"></i>
+                            <i class="fas fa-edit nav-icon"></i>
                             <p>Create</p>
                         </a>
                     </li>
@@ -62,18 +62,45 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                         <a href="{{ route('category.index') }}" class="nav-link {{ (Route::is('category.index') || Route::is('category.edit')) ? 'active' : '' }}">
-                        <i class="far fa-circle nav-icon"></i>
+                        <i class="fas fa-link nav-icon"></i>
                         <p>List</p>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('category.create') }}" class="nav-link {{ Route::is('category.create')  ? 'active' : '' }}">
-                            <i class="far fa-circle nav-icon"></i>
+                            <i class="fas fa-edit nav-icon"></i>
                             <p>Create</p>
                         </a>
                     </li>
                     </ul>
                 </li>
+
+                {{-- post --}}
+                <li class="nav-item {{ Request::is('post*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ Request::is('post*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-upload"></i>
+                        <p>
+                        Post
+                        <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                        <a href="{{ route('post.index') }}" class="nav-link {{ (Route::is('post.index') || Route::is('post.edit')) ? 'active' : '' }}">
+                        <i class="fas fa-link nav-icon"></i>
+                        <p>List</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('post.create') }}" class="nav-link {{ Route::is('post.create')  ? 'active' : '' }}">
+                            <i class="fas fa-edit nav-icon"></i>
+                            <p>Create</p>
+                        </a>
+                    </li>
+                    </ul>
+                </li>
+
+                {{-- superadmin --}}
                 @if(Auth::user()->role == "superadmin")
                 <li class="nav-item">
                     <a href="/user" class="nav-link {{ (Route::is('user.index') || Route::is('show.show')) ? 'active' : '' }}">
