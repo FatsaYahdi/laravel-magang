@@ -15,7 +15,8 @@ class CategoryController extends Controller
     public function list(Request $req)
     {
         return datatables()
-            ->eloquent(Category::query()->when(!$req->order, function ($query) {
+            ->eloquent(Category::query()
+            ->when(!$req->order, function ($query) {
                 $query->latest();
             }))
             ->addColumn('action', function ($category) {

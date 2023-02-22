@@ -12,10 +12,13 @@ class TagController extends Controller
     {
         return view('tag.index');
     }
-    public function list()
+    public function list(Request $req)
     {
         return datatables()
-            ->eloquent(Tag::query()->latest())
+            ->eloquent(Tag::query()->latest()
+            ->when(!$req->order, function ($query) {
+                $query->latest();
+            }))
             ->addColumn('action', function ($tag) {
                 return '
                 <div class="d-flex">

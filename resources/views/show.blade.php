@@ -123,9 +123,9 @@
                                             value="active"
                                         >Active</option>
                                         <option
-                                            {{ ($user->status == "inactive") ? 'selected' : '' }}
-                                            value="inactive"
-                                        >Inactive</option>
+                                            {{ ($user->status == "blocked") ? 'selected' : '' }}
+                                            value="blocked"
+                                        >Blocked</option>
                                     </select>
 
                                     @error('status')

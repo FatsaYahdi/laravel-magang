@@ -60,6 +60,42 @@
                             </div>
                         </div>
 
+                        {{-- tag --}}
+                        <div class="row mb-3">
+                            <label for="tags" class="col-md-2 col-form-label text-center">{{ __('Tag') }}</label>
+
+                            <div class="col-md-10">
+                                @foreach ($tags as $tag)
+                                    <input type="checkbox" name="tags[]" id="tags_{{ $tag->id }}" value="{{ $tag->id }}">
+                                    <label for="tags_{{ $tag->id }}">{{ $tag->tag }}</label>
+                                @endforeach
+
+                                @error('tags')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        {{-- Category --}}
+                        <div class="row mb-3">
+                            <label for="categories" class="col-md-2 col-form-label text-center">{{ __('Category') }}</label>
+
+                            <div class="col-md-10">
+                                @foreach ($categories as $category)
+                                    <input class="px-2" type="checkbox" name="categories[]" id="categories-{{ $category->id }}" value="{{ $category->id }}">
+                                    <label for="categories-{{ $category->id }}">{{ $category->category }}</label>
+                                @endforeach
+
+                                @error('categories')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
                         <input type="hidden" name="created_by" value="{{ Auth::user()->name }}">
                         
                         <div class="row mb-0">

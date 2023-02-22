@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -13,10 +16,13 @@ class PostController extends Controller
     {
         return view('post.index');
     }
-    public function list()
+    public function list(Request $req)
     {
         return datatables()
-            ->eloquent(Post::query()->latest())
+            ->eloquent(Post::query()->latest()
+            ->when(!$req->order, function ($query) {
+                $query->latest();
+            }))
             ->editColumn('action', function ($post) {
                 return '
                 <div class="d-flex">
@@ -47,10 +53,12 @@ class PostController extends Controller
 
     public function create()
     {
-        return view('post.create');
+        return view('post.create',[
+            'categories' => Category::all(),
+            'tags' => Tag::all(),
+        ]);
     }
 
-    
     public function store(Request $request)
     {
         $request->validate([
@@ -62,23 +70,26 @@ class PostController extends Controller
         $request->image->storeAs('public/images/posts/', $fileName);
         $data = [
             'title' => $request->title,
+            'slug' => Str::slug($request->title),
             'content' => $request->content,
+            'image' => $fileName,
             'created_by' => Auth::user()->name,
-            'image' => $fileName
         ];
         $post = Post::create($data);
+        $post->tags()->sync($request->input('tags' ,[]));
+        $post->categories()->sync($request->input('categories' ,[]));
         return redirect('/post')->with('success','Post Berhasil dibuat.');
     }
 
-    
-
     public function edit($id)
     {
-        $post = Post::find($id);
-        return view('post.edit',compact('post'));
+        return view('post.edit', [
+            'post' => Post::find($id),
+            'tags' => Tag::all(),
+            'categories' => Category::all(),
+        ]);
     }
 
-    
     public function update(Request $request, Post $post)
     {
         $find = Post::find($post->id);
@@ -89,6 +100,7 @@ class PostController extends Controller
         ]);
         $data = [
             'title' => $request->title,
+            'slug' => Str::slug($request->title),
             'content' => $request->content,
             'created_by' => Auth::user()->name,
         ];
@@ -104,13 +116,15 @@ class PostController extends Controller
             $data['image'] = $find->image;
         }
         $find->update($data);
+        $post->tags()->sync($request->input('tags', []));
+        $post->categories()->sync($request->input('categories', []));
         return redirect('/post')->with('success','Post Berhasil Di Update.');
     }
 
     public function destroy(Post $post)
     {
-        $post->delete();
         Storage::delete('public/images/posts/' . $post->image);
+        $post->delete();
         return redirect('/post')->with('success','Post Berhasil Dihapus.');
     }
 }

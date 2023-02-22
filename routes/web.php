@@ -29,7 +29,7 @@ Route::middleware(['auth', 'verified', 'actived','spam'])->group(function () {
         );
     }
     );
-    Route::prefix('tag')->group(function () {
+    Route::prefix('tag')->middleware('spam')->group(function () {
         Route::controller(TagController::class)->group(function () {
             Route::get('/', 'index')->name('tag.index');
             Route::get('/list', 'list')->name('tag.list');
@@ -43,7 +43,7 @@ Route::middleware(['auth', 'verified', 'actived','spam'])->group(function () {
     }
     );
 
-    Route::prefix('category')->controller(CategoryController::class)->group(function () {
+    Route::prefix('category')->middleware('spam')->controller(CategoryController::class)->group(function () {
         Route::get('/', 'index')->name('category.index');
         Route::get('/list', 'list')->name('category.list');
         Route::get('/create', 'create')->name('category.create');
@@ -54,7 +54,7 @@ Route::middleware(['auth', 'verified', 'actived','spam'])->group(function () {
     }
     );
 
-    Route::prefix('post')->controller(PostController::class)->group(function () {
+    Route::prefix('post')->middleware('spam')->controller(PostController::class)->group(function () {
         Route::get('/', 'index')->name('post.index');
         Route::get('/list', 'list')->name('post.list');
         Route::get('/create', 'create')->name('post.create');
