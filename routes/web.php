@@ -1,10 +1,15 @@
 <?php
 
-use App\Http\Controllers\{CategoryController, HomeController, MyProfileController, PostController, ShowController, TagController, UserController, UpdateUserController,};
+use App\Http\Controllers\{CategoryController, HomeController, MyProfileController, PostController, PostShowController, ShowController, TagController, UserController, UpdateUserController,};
 use Illuminate\Support\Facades\{Route, Auth};
 
 Auth::routes(['verify' => true]);
 Route::get('verify/{token}', 'VerificationController@verify')->name('verify')->middleware('verified');
+
+Route::controller(PostShowController::class)->group(function () {
+    Route::get('/', 'index')->name('home.index');
+    Route::get('/posts/{slug}', 'show')->name('post.show');
+});
 
 Route::middleware(['auth', 'verified', 'actived','spam'])->group(function () {
     Route::prefix('my-profile')->controller(MyProfileController::class)->group(function () {
@@ -13,7 +18,7 @@ Route::middleware(['auth', 'verified', 'actived','spam'])->group(function () {
     }
     );
 
-    Route::get('/', HomeController::class)->name('home');
+    Route::get('/home', HomeController::class)->name('home.home');
 
     Route::get('/show/{id}', [ShowController::class, 'show'])->name('show.show');
     Route::put('/show/{id}', [ShowController::class, 'update'])->name('show.update');

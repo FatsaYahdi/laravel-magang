@@ -15,12 +15,12 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                {{-- Home --}}
+                {{-- Profile --}}
                <li class="nav-item">
-                    <a href="{{ route('home') }}" class="nav-link {{ Route::is('home') ? 'active' : '' }}">
-                        <i class="nav-icon fa fa-home"></i>
+                    <a href="{{ route('home.home') }}" class="nav-link {{ Route::is('home.home') ? 'active' : '' }}">
+                        <i class="nav-icon fa fa-user"></i>
                         <p>
-                            Home
+                            Profile
                         </p>
                     </a>
                 </li>

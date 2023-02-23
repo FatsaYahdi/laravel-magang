@@ -60,6 +60,25 @@
                             </div>
                         </div>
 
+                        {{-- pinned --}}
+                        <div class="row mb-3">
+                            <label for="is_pinned" class="col-md-2 col-form-label text-center">{{ __('Sematkan') }}</label>
+
+                            <div class="col-md-10">
+                                <select name="is_pinned" id="is_pinned" class="form-control @error('image') is-invalid @enderror">
+                                    <option selected disabled>Pilih 1</option>
+                                    <option value="1">Ya</option>
+                                    <option value="0">Tidak</option>
+                                </select>
+
+                                @error('is_pinned')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
                         {{-- tag --}}
                         <div class="row mb-3">
                             <label for="tags" class="col-md-2 col-form-label text-center">{{ __('Tag') }}</label>

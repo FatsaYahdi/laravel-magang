@@ -65,6 +65,7 @@ class PostController extends Controller
             'title' => 'string|required|min:3',
             'image' => 'required',
             'content' => 'required',
+            'is_pinned' => 'required'
         ]);
         $fileName = $request->file('image')->getClientOriginalName();
         $request->image->storeAs('public/images/posts/', $fileName);
@@ -74,6 +75,7 @@ class PostController extends Controller
             'content' => $request->content,
             'image' => $fileName,
             'created_by' => Auth::user()->name,
+            'is_pinned' => $request->is_pinned,
         ];
         $post = Post::create($data);
         $post->tags()->sync($request->input('tags' ,[]));
@@ -97,12 +99,14 @@ class PostController extends Controller
             'title' => 'string|required|min:3',
             'image' => 'nullable',
             'content' => 'string|min:8',
+            'is_pinned' => 'required',
         ]);
         $data = [
             'title' => $request->title,
             'slug' => Str::slug($request->title),
             'content' => $request->content,
             'created_by' => Auth::user()->name,
+            'is_pinned' => $request->is_pinned,
         ];
         if ($request->hasFile('image')) {
             $post = $request->file('image');

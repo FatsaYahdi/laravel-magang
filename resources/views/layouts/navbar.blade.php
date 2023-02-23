@@ -28,12 +28,15 @@
             </a>
 
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <a href="/" class="dropdown-item">
+                    Home
+                </a>
+                <hr class="m-1 p-0">
                 <a href="{{ route('my.profile.index') }}" class="dropdown-item">
                     Edit Profile
                 </a>
 
-                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                     document.getElementById('logout-form').submit();">
+                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     {{ __('Logout') }}
                 </a>
 

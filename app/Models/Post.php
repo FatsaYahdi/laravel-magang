@@ -17,6 +17,7 @@ class Post extends Model
         'tags',
         'categories',
         'slug',
+        'is_pinned',
     ];
     protected $hidden = [
         'created_at',
@@ -32,4 +33,10 @@ class Post extends Model
     {
         return $this->belongsToMany(Category::class, 'post_category');
     }
+
+    public function getRouteKeyName()
+{
+    return 'slug';
+}
+
 }
