@@ -124,6 +124,8 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         Storage::delete('public/images/posts/' . $post->image);
+        $post->tags()->detach();
+        $post->categories()->detach();
         $post->delete();
         return redirect('/post')->with('success','Post Berhasil Dihapus.');
     }
