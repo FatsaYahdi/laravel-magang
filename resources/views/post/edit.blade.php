@@ -65,7 +65,7 @@
                             <label for="is_pinned" class="col-md-2 col-form-label text-center">{{ __('Sematkan') }}</label>
 
                             <div class="col-md-10">
-                                <select name="is_pinned" id="is_pinned">
+                                <select name="is_pinned" id="is_pinned" class="form-control @error('image') is-invalid @enderror">
                                     <option value="1">Ya</option>
                                     <option value="0">Tidak</option>
                                 </select>
