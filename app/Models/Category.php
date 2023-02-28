@@ -17,4 +17,8 @@ class Category extends Model
     protected $attributes = [
         'description' => ''
     ];
+
+    public function categories() {
+        return $this->belongsToMany(Post::class,'post_category');
+    }
 }

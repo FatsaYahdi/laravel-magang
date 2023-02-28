@@ -62,7 +62,7 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'string|required|min:3',
+            'title' => 'required|string|min:3',
             'image' => 'required',
             'content' => 'required',
             'is_pinned' => 'required'
@@ -86,15 +86,16 @@ class PostController extends Controller
     public function edit($id)
     {
         return view('post.edit', [
-            'post' => Post::find($id),
+            'post' => Post::findOrFail($id),
             'tags' => Tag::all(),
             'categories' => Category::all(),
+            
         ]);
     }
-
+    
     public function update(Request $request, Post $post)
     {
-        $find = Post::find($post->id);
+        $find = Post::findOrFail($post->id);
         $request->validate([
             'title' => 'string|required|min:3',
             'image' => 'nullable',
@@ -119,10 +120,10 @@ class PostController extends Controller
         } else {
             $data['image'] = $find->image;
         }
-        $find->update($data);
         $post->tags()->sync($request->input('tags', []));
         $post->categories()->sync($request->input('categories', []));
-        return redirect('/post')->with('success','Post Berhasil Di Update.');
+        $find->update($data);
+        return redirect('post')->with('success','Post Berhasil Di Update.');
     }
 
     public function destroy(Post $post)
@@ -131,6 +132,7 @@ class PostController extends Controller
         $post->tags()->detach();
         $post->categories()->detach();
         $post->delete();
-        return redirect('/post')->with('success','Post Berhasil Dihapus.');
+        return response()->json(['success' => 'Post has been Deleted!']);
     }
+
 }

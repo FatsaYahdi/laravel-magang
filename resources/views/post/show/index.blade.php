@@ -26,17 +26,24 @@
     </head>
 
 
-    <body class="antialiased dark:bg-gray-900">
+    <body class="antialiased">
         @include('includes.nav-home')
+            @if(request()->query('page') == null || request()->query('page') == '1')
+            @if(!Route::is('post.category') && !Route::is('post.tag'))
                 <div class="mx-auto sm:px-6 lg:px-5">
                     <div id="carouselExample" class="carousel slide w-100">
-                        <div class="carousel-inner pt-8 mt-8">
-                            @foreach ($posts->where('is_pinned', true) as $index => $post)
+                        <div class="carousel-inner pt-3">
+                            @foreach ($pinnedPosts as $post)
                                 <div class="carousel-item @if ($loop->first) active @endif">
-                                    <img src="{{ asset('/storage/images/posts/'.$post->image) }}" class="d-block w-100" alt="{{ $post->title }}" style="filter: brightness(50%)">
+                                    @if ($post->image != 'none')
+                                        <img src="{{ asset('/storage/images/posts/'.$post->image) }}" class="d-block w-100 img-fluid" alt="{{ $post->title }}" style="filter: brightness(50%)">
+                                    @else
+                                        <img src="{{ asset('/images/hehehehe.png') }}" class="d-block w-100 img-fluid" alt="{{ $post->title }}" style="filter: brightness(50%)">
+                                    @endif
                                     <div class="container">
                                         <div class="carousel-caption">
-                                            <h1>{{ $post->title }}</h1>
+                                            <h2>{{ $post->title }}</h1>
+                                            <h6>{!! $post->content !!}</h6>
                                             <a href="/posts/{{ $post->slug }}" class="btn btn-primary">Read More</a>
                                         </div>
                                     </div>
@@ -52,25 +59,55 @@
                           <span class="visually-hidden">Next</span>
                         </button>
                     </div>
+            @endif
+            @endif
 
-                    <div class="container bg-gray-900">
+                    <div class="container">
                         <div class="row">
                             @foreach ($posts as $post)
                                 <div class="col-md-4 my-2">
-                                    <div class="card h-100">
-                                        <img src="{{ asset('/storage/images/posts/'.$post->image) }}" class="card-img-top img-fluid" style="max-height: 230px">
+                                    <div class="card h-100" style="min-height: 400px">
+                                        @if ($post->image != 'none')
+                                            <img src="{{ asset('/storage/images/posts/'.$post->image) }}" class="card-img-top img-fluid" style="max-height: 230px">
+                                        @else
+                                            <img src="{{ asset('/images/hehehehe.png') }}" class="card-img-top img-fluid" style="max-height: 230px">
+                                        @endif
                                         <div class="card-body">
                                             <h4 class="card-title pt-2">
                                                 {{ $post->title }}
                                             </h4>
-                                            <p class="card-text">
+                                            <p class="card-text  text-truncate">
                                                 {!! $post->content !!}
                                             </p>
-                                            <a href="/posts/{{ $post->slug }}" class="btn btn-primary">Read More</a>
+                                            <p>Created By : <span class="text-muted">{{ $post->created_by }}</span></p>
+                                            <p>
+                                                @foreach($post->categories as $category)
+                                                    <div class="btn btn-outline-secondary btn-sm">
+                                                        <a href="{{ route('post.category', $category->id) }}">
+                                                            {{ $category->category }}
+                                                        </a>
+                                                    </div>
+                                                @endforeach
+                                            </p>
+                                                <a href="/posts/{{ $post->slug }}" class="btn btn-primary">Read More</a>
                                         </div>
                                     </div>
                                 </div>
                             @endforeach
+                            <div class="d-flex justify-content-center my-4">
+                                @if (!Route::is('post.category') && !Route::is('post.tag'))
+                                    @if (!empty($posts))
+                                        <div>{{ $posts->links() }}</div>
+                                    @endif
+                                @endif
+                            </div>
+                            <div class="d-flex justify-content-center mb-4 px-4">
+                                @if (!Route::is('post.category') && !Route::is('post.tag'))
+                                    @foreach ($tags as $tag)
+                                        <a class="px-3" href="{{ route('post.tag',$tag->id) }}"><h5>#{{ $tag->tag }}</h5></a>
+                                    @endforeach
+                                @endif
+                            </div>
                         </div>
                     </div>
             

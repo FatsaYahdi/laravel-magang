@@ -21,22 +21,18 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $fillable = [
         'name',
         'email',
-        'password',
-        'birth',
-        'gender',
         'role',
-        'pp',
+        'birth',
         'address',
+        'gender',
+        'password',
+        'pp',
         'status'
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
-    ];
-    protected $attributes = [
-        'pp' => '',
-        'role' => 'admin',
     ];
 
     protected $casts = [
@@ -46,5 +42,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function tags()
     {
         return $this->hasMany(Tag::class);
+    }
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 }

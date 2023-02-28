@@ -15,8 +15,10 @@ function destroy(event) {
             userDataTable.ajax.reload();
             $('#delete-modal').modal('hide');
             confirmButton.prop("disabled", false);
+            toastr.success(res.success);
         }).fail(function (err) {
             confirmButton.prop("disabled", false);
+            toastr.error(res.responseJSON.message);
         });
     })
 

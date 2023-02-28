@@ -96,6 +96,6 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-        return redirect('/category')->with('success','Category Berhasil Dihapus.');
+        return response()->json(['success' => 'Category Berhasil Di Hapus.']);
     }
 }

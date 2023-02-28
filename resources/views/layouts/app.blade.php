@@ -24,7 +24,9 @@
 <body class="sidebar-mini layout-fixed">
     <div class="wrapper">
         @include('layouts.navbar')
+        @if (auth()->user())
         @include('layouts.sidebar')
+        @endif
         <div class="content-wrapper">
             <section class="content-header">
                 <div class="container-fluid">

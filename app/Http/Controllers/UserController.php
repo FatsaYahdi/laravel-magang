@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
@@ -53,8 +54,28 @@ class UserController extends Controller
 
     public function delete(User $user)
     {
-        $user->delete();
         Storage::delete('public/images/',$user->pp);
-        return redirect('user');
+        $user->delete();
+        return response()->json(['success' => 'User Telah Berhasil Di Hapus!']);
+    }
+
+    public function create() {
+        return view('user.create');
+    }
+
+    public function store(Request $request) {
+        $request->validate([
+            'name' => 'required|string|min:3|unique:users',
+            'email' => 'required|string|min:8',
+            'password' => 'required|string|min:8|confirmed'
+        ]);
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => $request->role,
+        ];
+        User::create($data);
+        return redirect('/user')->with('success','User Telah Di Buat.');
     }
 }

@@ -2,18 +2,10 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('vendor/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/toastr/toastr.min.css') }}">
 @endpush
 
 @section('content')
-@if(session('success'))
-<div class="container-fluid">
-    <div class="row">
-        <div class="alert alert-success" role="alert">
-            {{ session('success') }}
-        </div>
-    </div>
-</div>
-@endif
 <div class="container">
     <div class="row justify-content-center">
         <div class="col">
@@ -40,10 +32,16 @@
 @push('scripts')
     <script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('vendor/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('vendor/toastr/toastr.min.js') }}"></script>
     <script>
+        const smg = "{{ session()->get('success') }}";
+        if(smg) {
+            toastr.success(smg)
+        }
         let userDataTable;
         $(document).ready(function () {
             userDataTable = $('table').DataTable({
+                responsive: true,
                 processing: false,
                 serverSide: true,
                 ajax: "{{ route('category.list') }}",

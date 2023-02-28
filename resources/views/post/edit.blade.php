@@ -10,7 +10,7 @@
                 <div class="card-header text-bold">{{ __('Create Tag') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('post.update',$post->id) }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('post.update',['post' => $post->id]) }}" enctype="multipart/form-data">
                         @csrf
                         @method('put')
                         @honeypot
@@ -66,8 +66,8 @@
 
                             <div class="col-md-10">
                                 <select name="is_pinned" id="is_pinned" class="form-control @error('image') is-invalid @enderror">
-                                    <option value="1">Ya</option>
-                                    <option value="0">Tidak</option>
+                                    <option value="1" {{ ($post->is_pinned === true ? 'selected' : '') }}>Ya</option>
+                                    <option value="0" {{ ($post->is_pinned === false ? 'selected' : '') }}>Tidak</option>
                                 </select>
 
                                 @error('is_pinned')
@@ -83,9 +83,12 @@
                             <label for="tags" class="col-md-2 col-form-label text-center">{{ __('Tag') }}</label>
 
                             <div class="col-md-10">
-                                @foreach ($tags as $tag)
-                                    <input type="checkbox" name="tags[]" id="tags_{{ $tag->id }}" value="{{ $tag->id }}" {{ in_array($tag->id, $post->tags->pluck('id')->toArray()) ? 'checked' : '' }}> {{ $tag->tag }}
-                                @endforeach
+                                @forelse ($tags as $tag)
+                                    <input class="btn-check" type="checkbox" name="tags[]" id="tags_{{ $tag->id }}" value="{{ $tag->id }}" {{ in_array($tag->id, $post->tags->pluck('id')->toArray()) ? 'checked' : '' }}>
+                                    <label for="tags_{{ $tag->id }}" class="btn btn-md btn-outline-dark"> {{ $tag->tag }}</label>
+                                @empty
+                                    <h5 class="pt-2 form-control">-</h5>
+                                @endforelse
 
                                 @error('tags')
                                     <span class="invalid-feedback" role="alert">
@@ -100,9 +103,12 @@
                             <label for="categories" class="col-md-2 col-form-label text-center">{{ __('Category') }}</label>
 
                             <div class="col-md-10">
-                                @foreach ($categories as $category)
-                                    <input class="px-2" type="checkbox" name="categories[]" id="categories_{{ $category->id }}" value="{{ $category->id }}" {{ in_array($category->id, $post->categories->pluck('id')->toArray()) ? 'checked' : '' }}> {{ $category->category }}
-                                @endforeach
+                                @forelse ($categories as $category)
+                                    <input class="btn-check" type="checkbox" name="categories[]" id="categories_{{ $category->id }}" value="{{ $category->id }}" {{ in_array($category->id, $post->categories->pluck('id')->toArray()) ? 'checked' : '' }}> 
+                                    <label for="categories_{{ $category->id }}" class="btn btn-md btn-outline-dark">{{ $category->category }}</label>
+                                @empty
+                                    <h5 class="pt-2 form-control">-</h5>
+                                @endforelse
 
                                 @error('categories')
                                     <span class="invalid-feedback" role="alert">

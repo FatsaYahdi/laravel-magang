@@ -19,14 +19,13 @@ class PostSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('posts')->truncate();
         $faker = Faker::create();
 
         for ($i = 0; $i < 20; $i++) {
             $title = $faker->sentence();
             $content = $faker->paragraph();
             $created_by = $faker->name();
-            $imageName = 'Afternoon.jpg';
+            $imageName = 'none';
             $slug = Str::slug($title, '-');
             $isPinned = $faker->boolean(10);
 

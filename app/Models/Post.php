@@ -14,8 +14,6 @@ class Post extends Model
         'image',
         'content',
         'created_by',
-        'tags',
-        'categories',
         'slug',
         'is_pinned',
     ];
@@ -34,9 +32,9 @@ class Post extends Model
         return $this->belongsToMany(Category::class, 'post_category');
     }
 
-    public function getRouteKeyName()
-{
-    return 'slug';
-}
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 
 }

@@ -67,6 +67,7 @@ class Kernel extends HttpKernel
         // new
         'actived' => \App\Http\Middleware\CheckActive::class,
         'roled' => \App\Http\Middleware\CheckRole::class,
+        'member' => \App\Http\Middleware\Member::class,
         'spam' => \Spatie\Honeypot\ProtectAgainstSpam::class,
     ];
 }

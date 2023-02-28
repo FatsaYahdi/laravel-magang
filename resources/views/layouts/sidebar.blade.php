@@ -36,17 +36,17 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                        <a href="{{ route('tag.index') }}" class="nav-link {{ (Route::is('tag.index') || Route::is('tag.edit')) ? 'active' : '' }}">
-                        <i class="fas fa-link nav-icon"></i>
-                        <p>List</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('tag.create') }}" class="nav-link {{ Route::is('tag.create')  ? 'active' : '' }}">
-                            <i class="fas fa-edit nav-icon"></i>
-                            <p>Create</p>
-                        </a>
-                    </li>
+                            <a href="{{ route('tag.index') }}" class="nav-link {{ (Route::is('tag.index') || Route::is('tag.edit')) ? 'active' : '' }}">
+                            <i class="fas fa-link nav-icon"></i>
+                            <p>List</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('tag.create') }}" class="nav-link {{ Route::is('tag.create')  ? 'active' : '' }}">
+                                <i class="fas fa-edit nav-icon"></i>
+                                <p>Create</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
@@ -101,15 +101,32 @@
                 </li>
 
                 {{-- superadmin --}}
+                @if (auth()->user())
                 @if(Auth::user()->role == "superadmin")
-                <li class="nav-item">
-                    <a href="/user" class="nav-link {{ (Route::is('user.index') || Route::is('show.show')) ? 'active' : '' }}">
-                        <i class="nav-icon fa fa-users"></i>
+                <li class="nav-item {{ Request::is('user*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ Request::is('user*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-users"></i>
                         <p>
-                            User
+                        Users
+                        <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                        <a href="{{ route('user.index') }}" class="nav-link {{ (Route::is('user.index') || Route::is('show.show')) ? 'active' : '' }}">
+                        <i class="fas fa-link nav-icon"></i>
+                        <p>List</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('user.create') }}" class="nav-link {{ Route::is('user.create')  ? 'active' : '' }}">
+                            <i class="fas fa-edit nav-icon"></i>
+                            <p>Create</p>
+                        </a>
+                    </li>
+                    </ul>
                 </li>
+                @endif
                 @endif
             </ul>
         </nav>

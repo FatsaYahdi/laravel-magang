@@ -65,10 +65,9 @@
                             <label for="is_pinned" class="col-md-2 col-form-label text-center">{{ __('Sematkan') }}</label>
 
                             <div class="col-md-10">
-                                <select name="is_pinned" id="is_pinned" class="form-control @error('image') is-invalid @enderror">
-                                    <option selected disabled>Pilih 1</option>
+                                <select name="is_pinned" id="is_pinned" class="form-control @error('is_pinned') is-invalid @enderror">
                                     <option value="1">Ya</option>
-                                    <option value="0">Tidak</option>
+                                    <option value="0" selected>Tidak</option>
                                 </select>
 
                                 @error('is_pinned')
@@ -84,10 +83,14 @@
                             <label for="tags" class="col-md-2 col-form-label text-center">{{ __('Tag') }}</label>
 
                             <div class="col-md-10">
-                                @foreach ($tags as $tag)
-                                    <input type="checkbox" name="tags[]" id="tags_{{ $tag->id }}" value="{{ $tag->id }}">
-                                    <label for="tags_{{ $tag->id }}">{{ $tag->tag }}</label>
-                                @endforeach
+                                @forelse ($tags as $tag)
+                                <div class="form-check-inline pt-2">
+                                    <input type="checkbox" name="tags[]" id="tags_{{ $tag->id }}" value="{{ $tag->id }}" class="btn-check">
+                                    <label for="tags_{{ $tag->id }}" class="btn btn-md btn-outline-dark">{{ $tag->tag }}</label>
+                                </div>
+                                @empty
+                                    <h5 class="pt-2 form-control">-</h5>
+                                @endforelse
 
                                 @error('tags')
                                     <span class="invalid-feedback" role="alert">
@@ -102,10 +105,14 @@
                             <label for="categories" class="col-md-2 col-form-label text-center">{{ __('Category') }}</label>
 
                             <div class="col-md-10">
-                                @foreach ($categories as $category)
-                                    <input class="px-2" type="checkbox" name="categories[]" id="categories-{{ $category->id }}" value="{{ $category->id }}">
-                                    <label for="categories-{{ $category->id }}">{{ $category->category }}</label>
-                                @endforeach
+                                @forelse ($categories as $category)
+                                <div class="form-check-inline pt-2">
+                                    <input type="checkbox" name="categories[]" id="categories-{{ $category->id }}" value="{{ $category->id }}" class="btn-check">
+                                    <label for="categories-{{ $category->id }}" class="btn btn-md btn-outline-dark">{{ $category->category }}</label>
+                                </div>
+                                @empty
+                                    <h5 class="pt-2 form-control">-</h5>
+                                @endforelse
 
                                 @error('categories')
                                     <span class="invalid-feedback" role="alert">
