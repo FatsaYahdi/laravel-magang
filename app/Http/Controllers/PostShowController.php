@@ -21,12 +21,21 @@ class PostShowController extends Controller
     public function show($slug)
     {
         $post = Post::where('slug', $slug)->with('tags', 'categories')->firstOrFail();
+        $postId = $post->id;
+        $views = session()->get('post_views', []);
+        if (!in_array($postId, $views)) {
+            $post->increment('views');
+            $views[] = $postId;
+            session()->put('post_views', $views);
+        }
+        $post = $post->fresh();
         $comments = Comment::where('post_id', $post->id)->with('user')->get();
         return view('post.show.detail', [
             'post' => $post,
             'comments' => $comments,
         ]);
-    }
+}
+
     public function store(Request $request)
     {
         $data = $request->validate([
