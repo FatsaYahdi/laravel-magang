@@ -36,29 +36,68 @@
         </form>
         @endauth
 
-        <div class="container">
         @foreach ($comments as $comment)
-            <div class="d-flex flex-start">
+            <div class="d-flex flex-start position-relative">
             @if ($comment->user->pp == '' || $comment->user->pp == null)
                 <img src="{{ asset('/images/null.jfif') }}" class="rounded-circle shadow-1-strong me-3" width="60" height="60">
             @else
                 <img src="{{ asset('/storage/images/'.$comment->user->pp) }}" class="rounded-circle shadow-1-strong me-3" width="60" height="60">
             @endif
               <div>
-                <div><span class="fw-bold">{{ $comment->user->name }}</span> | <small class="mb-0">{{ $comment->created_at->diffForHumans() }}</small></div>
+                <div><span class="fw-bold">{{ $comment->user->name }}</span> | <small class="mb-0">{{ $comment->created_at->diffForHumans() }}</small>
+                    @if($comment->user->name == auth()->user()->name)
+                    <div class="dropdown position-absolute top-0 end-0">
+                        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            @if($comment->user->name == auth()->user()->name)
+                            <li>
+                                <button type="button" class="btn btn-link btn-sm dropdown-item" data-bs-toggle="collapse" data-bs-target="#editComment{{ $comment->id }}" aria-expanded="false" aria-controls="editComment{{ $comment->id }}">
+                                    Edit
+                                </button>
+                            </li>
+                            <li>
+                                <form action="{{ route('post.comment.delete', ['comment' => $comment->id]) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-link btn-sm dropdown-item">Delete</button>
+                                </form>
+                            </li>
+                            @endif
+                        </ul>
+                    </div>
+                    @endif
+                </div>
                 <div class="d-flex align-items-center mb-1">
                   {{ $comment->content }}
+                </div>
+                <div class="collapse" id="editComment{{ $comment->id }}">
+                    <form action="{{ route('post.comment.update', ['comment' => (int) $comment->id]) }}" method="POST">
+                      @csrf
+                      @method('PUT')
+                      <div class="mb-3">
+                        <textarea class="form-control" id="content" name="content" class="form-control">{{ $comment->content }}</textarea>
+                      </div>
+                      @error('content')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                      @enderror
+                      <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+                      <input type="hidden" name="post_id" value="{{ $post->id }}">
+                      <button type="submit" class="btn btn-primary">Update</button>
+                    </form>
                 </div>
               </div>
             </div>
             <hr class="my-3">
         @endforeach
-        </div>
 
 
         <div class="row">
             <div class="col-md-6">
-                <h4> Category : </h4>
+                <h4>Category : </h4>
                 @foreach ($post->categories as $category)
                     <a href="{{ route('post.category', $category->id) }}" class="btn btn-sm btn-outline-secondary mb-2 float-start">
                         {{ $category->category }}
@@ -68,7 +107,7 @@
             <div class="col-md-6">
                 <h4>Tag : </h4>
                 @foreach ($post->tags as $tag)
-                    <p class="mb-0"><a href="{{ route('post.tag', $tag->id) }}">#{{ $tag->tag }}</a></p>
+                    <p class="mb-0"><a href="{{ route('post.tag', $tag->id) }}" class="float-start">#{{ $tag->tag }}</a></p>
                 @endforeach
             </div>
         </div>

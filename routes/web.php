@@ -11,6 +11,8 @@ Route::controller(PostShowController::class)->group(function () {
         Route::get('/', 'index')->name('home.index');
         Route::get('/posts/{post:slug}', 'show')->name('post.show');
         Route::put('/posts/{post:slug}','store')->name('post.comment');
+        Route::put('/comments/{comment:id}','update')->name('post.comment.update');
+        Route::delete('/comments/{comment}','delete')->name('post.comment.delete');
         Route::get('/post/category/{category}','showCategory')->name('post.category');
         Route::get('/post/tag/{tag}','showTag')->name('post.tag');
 })->name('home');

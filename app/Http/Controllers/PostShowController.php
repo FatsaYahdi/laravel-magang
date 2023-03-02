@@ -61,4 +61,21 @@ class PostShowController extends Controller
         return view('post.show.index',compact(['posts','pinnedPosts','tags']));
     }
 
+    public function update(Request $request, $id)
+    {
+        $data = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'post_id' => 'required|exists:posts,id',
+            'content' => 'required|string|min:3|max:255',
+        ]);
+        $comment = Comment::findOrFail($id);
+        $comment->update($data);
+        return redirect()->back();
+    }
+
+    public function delete($comment)
+    {
+        Comment::destroy($comment);
+        return redirect()->back();
+    }
 }
