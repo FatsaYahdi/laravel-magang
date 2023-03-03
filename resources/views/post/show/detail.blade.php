@@ -35,7 +35,7 @@
         <button type="submit" class="btn btn-primary mb-3" id="btn-submit">Submit</button>
         </form>
         @endauth
-
+        <h3>Comment : <hr></h3>
         @foreach ($comments as $comment)
             <div class="d-flex flex-start position-relative">
             @if ($comment->user->pp == '' || $comment->user->pp == null)
@@ -44,14 +44,15 @@
                 <img src="{{ asset('/storage/images/'.$comment->user->pp) }}" class="rounded-circle shadow-1-strong me-3" width="60" height="60">
             @endif
               <div>
-                <div><span class="fw-bold">{{ $comment->user->name }}</span> | <small class="mb-0">{{ $comment->created_at->diffForHumans() }}</small>
-                    @if($comment->user->name == auth()->user()->name)
+                <div><span class="fw-bold">{{ $comment->user->name }}</span> | <small class="mb-0">{{ ($comment->created_at === $comment->updated_at) ? $comment->created_at->diffForHumans() : $comment->updated_at->diffForHumans() }}</small>
+                    @auth
+                    @if($comment->user->name == Auth::user()->name)
                     <div class="dropdown position-absolute top-0 end-0">
                         <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
                             <i class="bi bi-three-dots-vertical"></i>
                         </button>
+                        @if($comment->user->name  == Auth::user()->name)
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            @if($comment->user->name == auth()->user()->name)
                             <li>
                                 <button type="button" class="btn btn-link btn-sm dropdown-item" data-bs-toggle="collapse" data-bs-target="#editComment{{ $comment->id }}" aria-expanded="false" aria-controls="editComment{{ $comment->id }}">
                                     Edit
@@ -64,10 +65,11 @@
                                     <button type="submit" class="btn btn-link btn-sm dropdown-item">Delete</button>
                                 </form>
                             </li>
-                            @endif
                         </ul>
+                        @endif
                     </div>
                     @endif
+                    @endauth
                 </div>
                 <div class="d-flex align-items-center mb-1">
                   {{ $comment->content }}
@@ -84,7 +86,9 @@
                             <strong>{{ $message }}</strong>
                         </span>
                       @enderror
+                      @auth
                       <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+                      @endauth
                       <input type="hidden" name="post_id" value="{{ $post->id }}">
                       <button type="submit" class="btn btn-primary">Update</button>
                     </form>
