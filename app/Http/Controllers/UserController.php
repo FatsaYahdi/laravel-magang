@@ -42,6 +42,9 @@ class UserController extends Controller
                 $class = ($user->status =='active' ) ? 'badge-success' : 'badge-danger';
                 return '<span class="badge ' . $class . '">' . $status . '</span>';
             })
+            ->editColumn('role', function ($user) {
+                return $user->role;
+            })
             ->addIndexColumn()
             ->escapeColumns(['action'])
             ->toJson();

@@ -7,7 +7,7 @@ Auth::routes(['verify' => true]);
 Route::get('verify/{token}', 'VerificationController@verify')->name('verify')->middleware('verified');
 
 // post show
-Route::controller(PostShowController::class)->group(function () {
+Route::controller(PostShowController::class)->middleware(['actived'])->group(function () {
         Route::get('/', 'index')->name('home.index');
         Route::get('/posts/{post:slug}', 'show')->name('post.show');
         Route::put('/posts/{post:slug}','store')->name('post.comment');

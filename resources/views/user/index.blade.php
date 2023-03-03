@@ -13,12 +13,13 @@
             <div class="card">
                 <div class="card-body">
                     <table class="table">
-                        <thead>
+                        <thead class="table-dark">
                             <tr>
                                 <th>No</th>
                                 <th>Profile</th>
                                 <th>Nama</th>
                                 <th>Email</th>
+                                <th>Role</th>
                                 <th>Status</th>
                                 <th width="10%">Aksi</th>
                             </tr>
@@ -55,6 +56,7 @@
                     { data: 'pp' , sortable:false, searchable: false},
                     { data: 'name' },
                     { data: 'email' },
+                    { data: 'role' },
                     { data: 'status' },
                     { data: 'action', sortable: false },
                 ],

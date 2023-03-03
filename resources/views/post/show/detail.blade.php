@@ -17,8 +17,8 @@
             <h4 class="pt-3">{!! $post->content !!}</h4>
             <p class="pt-2"><a href="{{ url()->previous() }}" class="pt-3">Back</a></p>
             <hr>
-        @auth
         </div>
+        @auth
         <label for="content"><h4>Create Comments</h4></label>
         <form action="{{ route('post.comment',$post->slug) }}" method="post" onsubmit="dis()" id="form-comment">
         @csrf
