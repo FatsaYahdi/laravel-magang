@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Post;
+use App\Models\PostSaves;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostShowController extends Controller
 {
@@ -20,7 +22,7 @@ class PostShowController extends Controller
     }
     public function show($slug)
     {
-        $post = Post::where('slug', $slug)->with('tags', 'categories')->firstOrFail();
+        $post = Post::where('slug', $slug)->with(['tags', 'categories','comments.replies','comments.user:id,name'])->firstOrFail();
         $postId = $post->id;
         $views = session()->get('post_views', []);
         if (!in_array($postId, $views)) {
@@ -42,8 +44,14 @@ class PostShowController extends Controller
             'user_id' => 'required|exists:users,id',
             'post_id' => 'required|exists:posts,id',
             'content' => 'required|string|min:3|max:255',
+            'parent_id' => 'nullable|exists:comments,id',
         ]);
-        Comment::create($data);
+        $comment = Comment::create($data);
+
+        if ($data['parent_id']) {
+            $parentComment = Comment::find($data['parent_id']);
+            $parentComment->replies()->save($comment);
+        }
         return redirect()->back();
     }
 

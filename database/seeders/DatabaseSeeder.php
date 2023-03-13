@@ -20,5 +20,6 @@ class DatabaseSeeder extends Seeder
         
         $this->call(UserSeeder::class);
         $this->call(PostSeeder::class);
+        \App\Models\Comment::factory(50)->create();
     }
 }

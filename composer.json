@@ -11,6 +11,7 @@
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.2",
+        "rtconner/laravel-likeable": "^3.2",
         "spatie/laravel-honeypot": "^4.3",
         "yajra/laravel-datatables-oracle": "^10.0"
     },

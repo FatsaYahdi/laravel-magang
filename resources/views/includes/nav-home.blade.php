@@ -37,6 +37,11 @@
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <div class="border-bottom pb-2">
+                                <a class="dropdown-item" href="{{ route('post-saves.show',['post' => auth()->user()->id ]) }}">
+                                    {{ __('Saved Post') }}
+                                </a>
+                            </div>
                             @if(auth()->user()->role != 'member')
                             <a class="dropdown-item" href="{{ route('home.home') }}">
                                 {{ __('Dashboard') }}

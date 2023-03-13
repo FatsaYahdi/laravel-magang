@@ -1,12 +1,15 @@
 <?php
 
-use App\Http\Controllers\{CategoryController, HomeController, MyProfileController, PostController, PostShowController, ShowController, TagController, UserController, UpdateUserController,};
+use App\Http\Controllers\{CategoryController, HomeController, LikeController, MyProfileController, PostController, PostSavesController, PostShowController, ShowController, TagController, UserController, UpdateUserController, VerificationController};
 use Illuminate\Support\Facades\{Route, Auth};
 
 Auth::routes(['verify' => true]);
-Route::get('verify/{token}', 'VerificationController@verify')->name('verify')->middleware('verified');
+Route::get('verify/{token}', [VerificationController::class, 'verify'])->name('verify')->middleware('verified');
 
 // post show
+Route::get('/posts',function () {
+    return redirect('/');
+});
 Route::controller(PostShowController::class)->middleware(['actived'])->group(function () {
         Route::get('/', 'index')->name('home.index');
         Route::get('/posts/{post:slug}', 'show')->name('post.show');
@@ -16,6 +19,19 @@ Route::controller(PostShowController::class)->middleware(['actived'])->group(fun
         Route::get('/post/category/{category}','showCategory')->name('post.category');
         Route::get('/post/tag/{tag}','showTag')->name('post.tag');
 })->name('home');
+
+// bookmark
+Route::controller(PostSavesController::class)->group(function () {
+    Route::get('/post-saves/{post}', 'show')->name('post-saves.show');
+    Route::post('/post-saves/{post}', 'store')->name('post-saves.store');
+    Route::delete('/post-saves/{post}', 'destroy')->name('post-saves.destroy');
+})->middleware('auth');
+
+// like
+// Route::controller(LikeController::class)->middleware('login')->group(function () {
+//     Route::post('/posts/{post}/like','store')->name('post.like');
+//     Route::delete('/posts/{post}/like','destroy')->name('post.unlike');
+// })->name('like');
 
 Route::middleware(['auth', 'verified', 'actived','spam','member'])->group(function () {
     // my profile
