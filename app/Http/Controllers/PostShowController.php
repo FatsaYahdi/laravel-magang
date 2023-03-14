@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Comment;
+use App\Models\Like;
 use App\Models\Post;
 use App\Models\PostSaves;
 use App\Models\Tag;
@@ -24,6 +25,7 @@ class PostShowController extends Controller
     {
         $post = Post::where('slug', $slug)->with(['tags', 'categories','comments.replies','comments.user:id,name'])->firstOrFail();
         $postId = $post->id;
+        // $like = Like::where('post_id',$post->id)->count();
         $views = session()->get('post_views', []);
         if (!in_array($postId, $views)) {
             $post->increment('views');
@@ -35,6 +37,7 @@ class PostShowController extends Controller
         return view('post.show.detail', [
             'post' => $post,
             'comments' => $comments,
+            // 'likes' => $like
         ]);
 }
 

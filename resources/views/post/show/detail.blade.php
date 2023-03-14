@@ -4,6 +4,54 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 </head>
+<style>
+    .container__ {
+  width: min(100%, 1140px);
+  margin: 1rem ;
+}
+
+.comment__container {
+  display: none;
+  position: relative;
+  margin: 20px
+}
+
+.comment__container.opened {
+  display: block;
+}
+
+.comment__container:not(:first-child) {
+  margin-left: 3rem;
+  margin-top: 1rem;
+}
+
+.comment__card {
+  padding: 20px;
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 0.5rem;
+  min-width: 100%;
+}
+
+.comment__card h3,
+.comment__card p {
+  margin-bottom: 2rem;
+}
+
+.comment__card-footer {
+  display: flex;
+  font-size: 0.85rem;
+  opacity: 0.6;
+  justify-content: flex-end;
+  align-items: center;
+  cursor: pointer;
+  gap: 20px;
+}
+
+.show-replies {
+  cursor: pointer;
+}
+</style>
 <body>
     @include('includes.nav-home')
     <div class="container py-2">
@@ -65,7 +113,7 @@
          </div>
         @endauth
         <h3>Comment : <hr></h3>
-        @foreach ($comments as $comment)
+        {{-- @foreach ($comments as $comment)
         @if ($comment->parent_id == null)
             <div class="d-flex flex-start position-relative">
             @if ($comment->user->pp == '' || $comment->user->pp == null)
@@ -107,9 +155,9 @@
                 <div class="align-items-center mb-1" style=" overflow: auto;">
                     <div class="text-wrap text-break pt-2">{{ $comment->content }}</div>
                     @if(count($comment->replies))
-                        <div class="pt-3">
+                        <div class="pt-3"> --}}
                             {{-- reply --}}
-                            @foreach($comment->replies as $reply)
+                            {{-- @foreach($comment->replies as $reply)
                                 <div class="comment">
                                     <div class="comment-body">
                                         <div class="d-flex align-items-center mb-1">
@@ -153,7 +201,7 @@
                                             <div class="text-wrap text-break">{{ $reply->content }}</div>
                                             @if ($reply->replies)
                                                 @foreach ($reply->replies as $reply2)
-                                                <div class="d-flex align-items-center mb-1">
+                                                <div class="d-flex align-items-center mb-1 p-3 ">
                                                     <div class="comment-avatar">
                                                         @if ($reply2->user->pp == '' || $reply2->user->pp == null)
                                                             <img src="{{ asset('/images/null.jfif') }}" class="rounded-circle shadow-1-strong me-3" width="30" height="30">
@@ -162,17 +210,11 @@
                                                         @endif
                                                     </div>
                                                     <div class="comment-author">{{ $reply2->user->name }} | {{ $reply2->created_at->diffForHumans() }}</div>
-                                                    
                                                         <div class="dropdown position-absolute top-3 end-0">
                                                             <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                                                 <i class="bi bi-three-dots-vertical"></i>
                                                             </button>
                                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                <li>
-                                                                    <button type="button" class="btn btn-link btn-sm dropdown-item" data-bs-toggle="collapse" data-bs-target="#replyRepliesComment{{ $reply2->id }}" aria-expanded="false" aria-controls="replyRepliesComment{{ $reply2->id }}">
-                                                                        Reply
-                                                                    </button>
-                                                                </li>
                                                                 @if($reply2->user->name  == Auth::user()->name)
                                                                 <li>
                                                                     <button type="button" class="btn btn-link btn-sm dropdown-item" data-bs-toggle="collapse" data-bs-target="#editReplyComment{{ $reply2->id }}" aria-expanded="false" aria-controls="editReplyComment{{ $reply2->id }}">
@@ -189,17 +231,18 @@
                                                                 @endif
                                                             </ul>
                                                         </div>
+                                                    <div class="text-break p-5">{{ $reply2->content }}</div>
                                                 </div>
                                                 @endforeach
                                             @endif
-                                        </div>
+                                        </div> --}}
                                         {{-- reply reply comment --}}
-                                        <div class="collapse" id="replyRepliesComment{{ $reply->id }}">
+                                        {{-- <div class="collapse" id="replyRepliesComment{{ $reply->id }}">
                                             <form action="{{ route('post.comment', ['post' => $post->slug]) }}" method="POST">
                                             @csrf
                                             @method('PUT')
                                             <div class="mb-3">
-                                                <textarea autofocus class="form-control" id="content" name="content"> reply </textarea>
+                                                <textarea autofocus class="form-control" id="content" name="content"> {{ old('content') }} </textarea>
                                             </div>
                                             @error('content')
                                                 <span class="invalid-feedback" role="alert">
@@ -213,14 +256,14 @@
                                             <input type="hidden" name="parent_id" value="{{ $reply->id }}">
                                             <button type="submit" class="btn btn-primary">Send</button>
                                             </form>
-                                        </div>
+                                        </div> --}}
                                         {{-- edit reply comment --}}
-                                        <div class="collapse" id="editReplyComment{{ $reply->id }}">
+                                        {{-- <div class="collapse" id="editReplyComment{{ $reply->id }}">
                                             <form action="{{ route('post.comment.update', ['comment' => $reply->id]) }}" method="POST">
                                               @csrf
                                               @method('PUT')
                                               <div class="mb-3">
-                                                <textarea class="form-control" id="content" name="content" class="form-control"> edit {{ $reply->content }}</textarea>
+                                                <textarea class="form-control" id="content" name="content" class="form-control"> {{ $reply->content }}</textarea>
                                               </div>
                                               @error('content')
                                                 <span class="invalid-feedback" role="alert">
@@ -239,10 +282,10 @@
                             @endforeach
                         </div>
                     @endif
-                </div>
+                </div> --}}
                   
                 {{-- edit --}}
-                <div class="collapse" id="editComment{{ $comment->id }}">
+                {{-- <div class="collapse" id="editComment{{ $comment->id }}">
                     <form action="{{ route('post.comment.update', ['comment' => $comment->id]) }}" method="POST">
                       @csrf
                       @method('PUT')
@@ -260,9 +303,9 @@
                       <input type="hidden" name="post_id" value="{{ $post->id }}">
                       <button type="submit" class="btn btn-primary">Update</button>
                     </form>
-                </div>
+                </div> --}}
                 {{-- edit --}}
-                <div class="collapse" id="replyComment{{ $comment->id }}">
+                {{-- <div class="collapse" id="replyComment{{ $comment->id }}">
                     <form action="{{ route('post.comment', ['post' => $post->slug]) }}" method="POST">
                       @csrf
                       @method('PUT')
@@ -286,8 +329,222 @@
             </div>
             <hr class="my-3">
             @endif
-        @endforeach
+        @endforeach --}}
 
+        {{-- 
+            @foreach ($comments as $comment)
+            @if(count($comment->replies))
+            @foreach($comment->replies as $reply)
+            @if ($reply->replies)
+            @foreach ($reply->replies as $reply2)
+            --}}
+        @foreach ($comments as $comment)
+        {{-- {{ $comment }} --}}
+        <div class="container__">
+            @if ($comment->parent_id == null)
+            <div class="comment__container opened" id="comment-{{ $comment->id }}">
+                <div class="comment__card">
+                    <div class="comment__title">
+                        <span class="fs-5 fw-bold">
+                            <img src="{{ ($comment->user->pp == null) ? asset('images/null.jfif') : asset('storage/images/'.$comment->user->pp) }}" class="rounded-circle" width="5%"> 
+                            &nbsp; {{ $comment->user->name }}
+                        </span>
+                        <span class="fs-6"> - {{ $comment->created_at->diffForHumans() }}
+                        </span>
+                    </div>
+                    <p>{{ $comment->content }}</p>
+                    <div class="comment__card-footer">
+                        @auth
+                        @if ($comment->user->name == auth()->user()->name)
+                        <div data-bs-toggle="collapse" data-bs-target="#editComment{{ $comment->id }}" aria-expanded="false" aria-controls="editComment{{ $comment->id }}">
+                            Edit
+                        </div>
+                        <div class="delete-button" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $comment->id }}').submit();">
+                            Delete
+                        </div>
+                        <form id="delete-form-{{ $comment->id }}" action="{{ route('post.comment.delete', ['comment' => $comment->id]) }}" method="POST" class="d-none">
+                            @csrf
+                            @method('DELETE')
+                        </form>
+                        @endif
+                        <div data-bs-toggle="collapse" data-bs-target="#replyComment{{ $comment->id }}" aria-expanded="false" aria-controls="replyComment{{ $comment->id }}">
+                            Reply
+                        </div>
+                        @endauth
+                        <div class="show-replies">Show Reply</div>
+                    </div>
+                    <div class="collapse" id="editComment{{ $comment->id }}">
+                        <form action="{{ route('post.comment.update', ['comment' => $comment->id]) }}" method="POST">
+                          @csrf
+                          @method('PUT')
+                          <div class="mb-3">
+                            <textarea class="form-control" id="content" name="content" class="form-control">{{ $comment->content }}</textarea>
+                          </div>
+                          @error('content')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                          @enderror
+                          @auth
+                          <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+                          @endauth
+                          <input type="hidden" name="post_id" value="{{ $post->id }}">
+                          <button type="submit" class="btn btn-primary">Update</button>
+                        </form>
+                    </div>
+                    <div class="collapse" id="replyComment{{ $comment->id }}">
+                        <form action="{{ route('post.comment', ['post' => $post->slug]) }}" method="POST">
+                          @csrf
+                          @method('PUT')
+                          <div class="mb-3">
+                            <textarea autofocus class="form-control" id="content" name="content">{{ __('@:username ', ['username' => $comment->user->name]) }}</textarea>
+                          </div>
+                          @error('content')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                          @enderror
+                          @auth
+                          <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+                          @endauth
+                          <input type="hidden" name="post_id" value="{{ $post->id }}">
+                          <input type="hidden" name="parent_id" value="{{ $comment->id }}">
+                          <button type="submit" class="btn btn-primary">Send</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="comment__container" dataset="comment-{{ $comment->id }}" id="reply-{{ $comment->id }}">
+                    @if(count($comment->replies))
+                    @foreach ($comment->replies as $reply)
+                    <div class="comment__card">
+                        <div class="comment__title">
+                            <span class="fs-5 fw-bold">
+                                <img src="{{ ($reply->user->pp == null) ? asset('images/null.jfif') : asset('storage/images/'.$reply->user->pp) }}" class="rounded-circle" width="5%"> 
+                                &nbsp; {{ $reply->user->name }}
+                            </span> 
+                            <span class="fs-6"> - {{ $reply->created_at->diffForHumans() }}</span>
+                        </div>
+                        <p>{{ $reply->content }}</p>
+                        <div class="comment__card-footer">
+                            @auth
+                            @if ($reply->user->name == auth()->user()->name)
+                            <div data-bs-toggle="collapse" data-bs-target="#editReplyComment{{ $reply->id }}" aria-expanded="false" aria-controls="editReplyComment{{ $reply->id }}">
+                                Edit
+                            </div>
+                            <div class="delete-button" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $reply->id }}').submit();">
+                                Delete
+                            </div>
+                            <form id="delete-form-{{ $reply->id }}" action="{{ route('post.comment.delete', ['comment' => $reply->id]) }}" method="POST" class="d-none">
+                                @csrf
+                                @method('DELETE')
+                            </form>
+                            @endif
+                            <div data-bs-toggle="collapse" data-bs-target="#replyReplyComment{{ $reply->id }}" aria-expanded="false" aria-controls="replyReplyComment{{ $reply->id }}">
+                                Reply
+                            </div>
+                            @endauth
+                            <div class="show-replies">Show Reply</div>
+                        </div>
+                        <div class="collapse" id="editReplyComment{{ $reply->id }}">
+                            <form action="{{ route('post.comment.update', ['comment' => $reply->id]) }}" method="POST">
+                              @csrf
+                              @method('PUT')
+                              <div class="mb-3">
+                                <textarea class="form-control" id="content" name="content" class="form-control"> {{ $reply->content }}</textarea>
+                              </div>
+                              @error('content')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                              @enderror
+                              @auth
+                              <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+                              @endauth
+                              <input type="hidden" name="post_id" value="{{ $post->id }}">
+                              <button type="submit" class="btn btn-primary">Update</button>
+                            </form>
+                        </div>
+                        <div class="collapse" id="replyReplyComment{{ $reply->id }}">
+                            <form action="{{ route('post.comment', ['post' => $post->slug]) }}" method="POST">
+                              @csrf
+                              @method('PUT')
+                              <div class="mb-3">
+                                <textarea autofocus class="form-control" id="content" name="content">{{ __('@:username ', ['username' => $reply->user->name]) }}</textarea>
+                              </div>
+                              @error('content')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                              @enderror
+                              @auth
+                              <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+                              @endauth
+                              <input type="hidden" name="post_id" value="{{ $post->id }}">
+                              <input type="hidden" name="parent_id" value="{{ $reply->id }}">
+                              <button type="submit" class="btn btn-primary">Send</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="comment__container"  dataset="reply-{{ $comment->id }}" id="reply-reply-{{ $reply->id }}">
+                    @if ($reply->replies)
+                        @foreach ($reply->replies as $reply2)
+                            <div class="comment__card">
+                                <div class="comment__title">
+                                    <span class="fs-5 fw-bold">
+                                        <img src="{{ ($reply2->user->pp == null) ? asset('images/null.jfif') : asset('storage/images/'.$reply2->user->pp) }}" class="rounded-circle" width="5%"> 
+                                        &nbsp; {{ $reply2->user->name }}
+                                    </span> 
+                                    <span class="fs-6">
+                                         - {{ $reply2->created_at->diffForHumans() }}
+                                    </span>
+                                    </div>
+                                <p>{{ $reply2->content }}</p>
+                                <div class="comment__card-footer">
+                                    @auth
+                                    @if ($reply2->user->name == auth()->user()->name)
+                                    <div data-bs-toggle="collapse" data-bs-target="#editReplyReplyComment{{ $reply2->id }}" aria-expanded="false" aria-controls="editReplyReplyComment{{ $reply2->id }}">
+                                        Edit
+                                    </div>
+                                    <div class="delete-button" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $reply2->id }}').submit();">
+                                        Delete
+                                    </div>
+                                    <form id="delete-form-{{ $reply2->id }}" action="{{ route('post.comment.delete', ['comment' => $reply2->id]) }}" method="POST" class="d-none">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
+                                    @endif
+                                    @endauth
+                                </div>
+                                <div class="collapse" id="editReplyReplyComment{{ $reply2->id }}">
+                                    <form action="{{ route('post.comment.update', ['comment' => $reply2->id]) }}" method="POST">
+                                      @csrf
+                                      @method('PUT')
+                                      <div class="mb-3">
+                                        <textarea class="form-control" id="content" name="content" class="form-control">{{ $reply2->content }}</textarea>
+                                      </div>
+                                      @error('content')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                      @enderror
+                                      @auth
+                                      <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+                                      @endauth
+                                      <input type="hidden" name="post_id" value="{{ $post->id }}">
+                                      <button type="submit" class="btn btn-primary">Update</button>
+                                    </form>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
+                    </div>
+                    @endforeach
+                    @endif
+                </div>
+            </div>
+            @endif
+        </div>
+        @endforeach
         <div class="row">
             <div class="col-md-6">
                 <h4>Category : </h4>
@@ -312,4 +569,17 @@
     function dis() {
         document.getElementById('btn-submit').setAttribute('disabled', true);
     }
+    const showContainers = document.querySelectorAll(".show-replies");
+    showContainers.forEach((btn) =>
+    btn.addEventListener("click", (e) => {
+        let parentContainer = e.target.closest(".comment__container");
+        let _id = parentContainer.id;
+        if (_id) {
+        let childrenContainer = parentContainer.querySelectorAll(
+            `[dataset=${_id}]`
+        );
+        childrenContainer.forEach((child) => child.classList.toggle("opened"));
+        }
+    })
+    );
 </script>
