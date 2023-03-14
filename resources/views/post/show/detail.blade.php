@@ -48,9 +48,22 @@
   gap: 20px;
 }
 
-.show-replies {
+.show-replies,
+.hover_like,
+{
   cursor: pointer;
 }
+div#social-links {
+    display: inline-block;
+    margin: 0;
+    margin-bottom: 15px;
+}
+div#social-links a{
+    /* padding: 20px; */
+    /* margin: 10px; */
+    font-size: 30px
+}
+
 </style>
 <body>
     @include('includes.nav-home')
@@ -81,6 +94,15 @@
                 @endif
             @endif
 
+            {!! $share !!}
+            <div @auth onclick="event.preventDefault(); document.getElementById('like-{{ $post->id }}').submit();" @endauth>
+                    <p class="hover_like">
+                        <i class="fas fa-heart"></i> {{ $like }} Like
+                    </p>
+                <form action="{{ route('post.like', ['post' => $post->id]) }}" method="post" id="like-{{ $post->id }}" class="d-none">
+                    @csrf
+                </form>
+            </div>
             <p class="pt-2"><a href="{{ url()->previous() }}" class="pt-3">Back</a></p>
             <hr>
         </div>
@@ -113,231 +135,6 @@
          </div>
         @endauth
         <h3>Comment : <hr></h3>
-        {{-- @foreach ($comments as $comment)
-        @if ($comment->parent_id == null)
-            <div class="d-flex flex-start position-relative">
-            @if ($comment->user->pp == '' || $comment->user->pp == null)
-                <img src="{{ asset('/images/null.jfif') }}" class="rounded-circle shadow-1-strong me-3" width="60" height="60">
-            @else
-                <img src="{{ asset('/storage/images/'.$comment->user->pp) }}" class="rounded-circle shadow-1-strong me-3" width="60" height="60">
-            @endif
-              <div>
-                <div><span class="fw-bold">{{ $comment->user->name }}</span> | <small class="mb-0">{{ ($comment->created_at === $comment->updated_at) ? $comment->created_at->diffForHumans() : $comment->updated_at->diffForHumans() }}</small>
-                    @auth
-                    <div class="dropdown position-absolute top-0 end-0">
-                        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-three-dots-vertical"></i>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <li>
-                                <button type="button" class="btn btn-link btn-sm dropdown-item" data-bs-toggle="collapse" data-bs-target="#replyComment{{ $comment->id }}" aria-expanded="false" aria-controls="replyComment{{ $comment->id }}">
-                                    Reply
-                                </button>
-                            </li>
-                            @if($comment->user->name  == Auth::user()->name)
-                            <li>
-                                <button type="button" class="btn btn-link btn-sm dropdown-item" data-bs-toggle="collapse" data-bs-target="#editComment{{ $comment->id }}" aria-expanded="false" aria-controls="editComment{{ $comment->id }}">
-                                    Edit
-                                </button>
-                            </li>
-                            <li>
-                                <form action="{{ route('post.comment.delete', ['comment' => $comment->id]) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-link btn-sm dropdown-item">Delete</button>
-                                </form>
-                            </li>
-                            @endif
-                        </ul>
-                    </div>
-                    @endauth
-                </div>
-                <div class="align-items-center mb-1" style=" overflow: auto;">
-                    <div class="text-wrap text-break pt-2">{{ $comment->content }}</div>
-                    @if(count($comment->replies))
-                        <div class="pt-3"> --}}
-                            {{-- reply --}}
-                            {{-- @foreach($comment->replies as $reply)
-                                <div class="comment">
-                                    <div class="comment-body">
-                                        <div class="d-flex align-items-center mb-1">
-                                            <div class="comment-avatar">
-                                                @if ($reply->user->pp == '' || $reply->user->pp == null)
-                                                    <img src="{{ asset('/images/null.jfif') }}" class="rounded-circle shadow-1-strong me-3" width="30" height="30">
-                                                @else
-                                                    <img src="{{ asset('/storage/images/'.$reply->user->pp) }}" class="rounded-circle shadow-1-strong me-3" width="30" height="30">
-                                                @endif
-                                            </div>
-                                            <div class="comment-author">{{ $reply->user->name }} | {{ $reply->created_at->diffForHumans() }}</div>
-                                            
-                                                <div class="dropdown position-absolute top-3 end-0">
-                                                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                                        <i class="bi bi-three-dots-vertical"></i>
-                                                    </button>
-                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                        <li>
-                                                            <button type="button" class="btn btn-link btn-sm dropdown-item" data-bs-toggle="collapse" data-bs-target="#replyRepliesComment{{ $reply->id }}" aria-expanded="false" aria-controls="replyRepliesComment{{ $reply->id }}">
-                                                                Reply
-                                                            </button>
-                                                        </li>
-                                                        @if($reply->user->name  == Auth::user()->name)
-                                                        <li>
-                                                            <button type="button" class="btn btn-link btn-sm dropdown-item" data-bs-toggle="collapse" data-bs-target="#editReplyComment{{ $reply->id }}" aria-expanded="false" aria-controls="editReplyComment{{ $reply->id }}">
-                                                                Edit
-                                                            </button>
-                                                        </li>
-                                                        <li>
-                                                            <form action="{{ route('post.comment.delete', ['comment' => $reply->id]) }}" method="POST">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" class="btn btn-link btn-sm dropdown-item">Delete</button>
-                                                            </form>
-                                                        </li>
-                                                        @endif
-                                                    </ul>
-                                                </div>
-                                        </div>
-                                        <div class="d-flex align-items-center mb-1" style="max-height: 200px; overflow: auto;">
-                                            <div class="text-wrap text-break">{{ $reply->content }}</div>
-                                            @if ($reply->replies)
-                                                @foreach ($reply->replies as $reply2)
-                                                <div class="d-flex align-items-center mb-1 p-3 ">
-                                                    <div class="comment-avatar">
-                                                        @if ($reply2->user->pp == '' || $reply2->user->pp == null)
-                                                            <img src="{{ asset('/images/null.jfif') }}" class="rounded-circle shadow-1-strong me-3" width="30" height="30">
-                                                        @else
-                                                            <img src="{{ asset('/storage/images/'.$reply2->user->pp) }}" class="rounded-circle shadow-1-strong me-3" width="30" height="30">
-                                                        @endif
-                                                    </div>
-                                                    <div class="comment-author">{{ $reply2->user->name }} | {{ $reply2->created_at->diffForHumans() }}</div>
-                                                        <div class="dropdown position-absolute top-3 end-0">
-                                                            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                                                <i class="bi bi-three-dots-vertical"></i>
-                                                            </button>
-                                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                @if($reply2->user->name  == Auth::user()->name)
-                                                                <li>
-                                                                    <button type="button" class="btn btn-link btn-sm dropdown-item" data-bs-toggle="collapse" data-bs-target="#editReplyComment{{ $reply2->id }}" aria-expanded="false" aria-controls="editReplyComment{{ $reply2->id }}">
-                                                                        Edit
-                                                                    </button>
-                                                                </li>
-                                                                <li>
-                                                                    <form action="{{ route('post.comment.delete', ['comment' => $reply2->id]) }}" method="POST">
-                                                                        @csrf
-                                                                        @method('DELETE')
-                                                                        <button type="submit" class="btn btn-link btn-sm dropdown-item">Delete</button>
-                                                                    </form>
-                                                                </li>
-                                                                @endif
-                                                            </ul>
-                                                        </div>
-                                                    <div class="text-break p-5">{{ $reply2->content }}</div>
-                                                </div>
-                                                @endforeach
-                                            @endif
-                                        </div> --}}
-                                        {{-- reply reply comment --}}
-                                        {{-- <div class="collapse" id="replyRepliesComment{{ $reply->id }}">
-                                            <form action="{{ route('post.comment', ['post' => $post->slug]) }}" method="POST">
-                                            @csrf
-                                            @method('PUT')
-                                            <div class="mb-3">
-                                                <textarea autofocus class="form-control" id="content" name="content"> {{ old('content') }} </textarea>
-                                            </div>
-                                            @error('content')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                            @auth
-                                            <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
-                                            @endauth
-                                            <input type="hidden" name="post_id" value="{{ $post->id }}">
-                                            <input type="hidden" name="parent_id" value="{{ $reply->id }}">
-                                            <button type="submit" class="btn btn-primary">Send</button>
-                                            </form>
-                                        </div> --}}
-                                        {{-- edit reply comment --}}
-                                        {{-- <div class="collapse" id="editReplyComment{{ $reply->id }}">
-                                            <form action="{{ route('post.comment.update', ['comment' => $reply->id]) }}" method="POST">
-                                              @csrf
-                                              @method('PUT')
-                                              <div class="mb-3">
-                                                <textarea class="form-control" id="content" name="content" class="form-control"> {{ $reply->content }}</textarea>
-                                              </div>
-                                              @error('content')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                              @enderror
-                                              @auth
-                                              <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
-                                              @endauth
-                                              <input type="hidden" name="post_id" value="{{ $post->id }}">
-                                              <button type="submit" class="btn btn-primary">Update</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    @endif
-                </div> --}}
-                  
-                {{-- edit --}}
-                {{-- <div class="collapse" id="editComment{{ $comment->id }}">
-                    <form action="{{ route('post.comment.update', ['comment' => $comment->id]) }}" method="POST">
-                      @csrf
-                      @method('PUT')
-                      <div class="mb-3">
-                        <textarea class="form-control" id="content" name="content" class="form-control">{{ $comment->content }}</textarea>
-                      </div>
-                      @error('content')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                      @enderror
-                      @auth
-                      <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
-                      @endauth
-                      <input type="hidden" name="post_id" value="{{ $post->id }}">
-                      <button type="submit" class="btn btn-primary">Update</button>
-                    </form>
-                </div> --}}
-                {{-- edit --}}
-                {{-- <div class="collapse" id="replyComment{{ $comment->id }}">
-                    <form action="{{ route('post.comment', ['post' => $post->slug]) }}" method="POST">
-                      @csrf
-                      @method('PUT')
-                      <div class="mb-3">
-                        <textarea autofocus class="form-control" id="content" name="content">{{ __('@:username ', ['username' => $comment->user->name]) }}</textarea>
-                      </div>
-                      @error('content')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                      @enderror
-                      @auth
-                      <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
-                      @endauth
-                      <input type="hidden" name="post_id" value="{{ $post->id }}">
-                      <input type="hidden" name="parent_id" value="{{ $comment->id }}">
-                      <button type="submit" class="btn btn-primary">Send</button>
-                    </form>
-                </div>
-              </div>
-            </div>
-            <hr class="my-3">
-            @endif
-        @endforeach --}}
-
-        {{-- 
-            @foreach ($comments as $comment)
-            @if(count($comment->replies))
-            @foreach($comment->replies as $reply)
-            @if ($reply->replies)
-            @foreach ($reply->replies as $reply2)
-            --}}
         @foreach ($comments as $comment)
         {{-- {{ $comment }} --}}
         <div class="container__">
@@ -565,6 +362,7 @@
 
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
 <script>
     function dis() {
         document.getElementById('btn-submit').setAttribute('disabled', true);

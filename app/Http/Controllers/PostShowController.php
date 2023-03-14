@@ -23,9 +23,11 @@ class PostShowController extends Controller
     }
     public function show($slug)
     {
-        $post = Post::where('slug', $slug)->with(['tags', 'categories','comments.replies','comments.user:id,name'])->firstOrFail();
+        $post = Post::where('slug', $slug)->with(['tags', 'categories'])->firstOrFail();
         $postId = $post->id;
-        // $like = Like::where('post_id',$post->id)->count();
+        $like = Like::where('post_id',$post->id)->count();
+        $widget = \Share::currentPage()
+        ->facebook();
         $views = session()->get('post_views', []);
         if (!in_array($postId, $views)) {
             $post->increment('views');
@@ -37,7 +39,8 @@ class PostShowController extends Controller
         return view('post.show.detail', [
             'post' => $post,
             'comments' => $comments,
-            // 'likes' => $like
+            'like' => $like,
+            'share' => $widget
         ]);
 }
 

@@ -12,6 +12,7 @@ class Like extends Model
         'user_id',
         'post_id',
     ];
+    public $timestamps = false;
 
     public function user()
     {

@@ -22,16 +22,15 @@ Route::controller(PostShowController::class)->middleware(['actived'])->group(fun
 
 // bookmark
 Route::controller(PostSavesController::class)->group(function () {
-    Route::get('/post-saves/{post}', 'show')->name('post-saves.show')->middleware('auth');
+    Route::get('/post-saves/{post}', 'show')->name('post-saves.show');
     Route::post('/post-saves/{post}', 'store')->name('post-saves.store');
     Route::delete('/post-saves/{post}', 'destroy')->name('post-saves.destroy');
-});
+})->middleware(['auth','actived']);
 
 // like
-// Route::controller(LikeController::class)->middleware('login')->group(function () {
-//     Route::post('/posts/{post}/like','store')->name('post.like');
-//     Route::delete('/posts/{post}/like','destroy')->name('post.unlike');
-// })->name('like');
+Route::controller(LikeController::class)->group(function () {
+    Route::post('/posts/{post}/like','like')->name('post.like');
+})->name('like')->middleware(['auth','actived']);
 
 Route::middleware(['auth', 'verified', 'actived','spam','member'])->group(function () {
     // my profile
