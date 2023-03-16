@@ -26,8 +26,8 @@ class PostShowController extends Controller
         $post = Post::where('slug', $slug)->with(['tags', 'categories'])->firstOrFail();
         $postId = $post->id;
         $like = Like::where('post_id',$post->id)->count();
-        $widget = \Share::currentPage()
-        ->facebook();
+        $url = 'http://127.0.0.1:8000/posts/'.$post->slug;
+        $widget = \Share::page($url)->facebook();
         $views = session()->get('post_views', []);
         if (!in_array($postId, $views)) {
             $post->increment('views');

@@ -6,64 +6,61 @@
 </head>
 <style>
     .container__ {
-  width: min(100%, 1140px);
-  margin: 1rem ;
-}
+    margin: 1rem;
+    }
 
-.comment__container {
-  display: none;
-  position: relative;
-  margin: 20px
-}
+    .comment__container {
+    display: none;
+    position: relative;
+    margin: 20px;
+    }
 
-.comment__container.opened {
-  display: block;
-}
+    .comment__container.opened {
+    display: block;
+    }
 
-.comment__container:not(:first-child) {
-  margin-left: 3rem;
-  margin-top: 1rem;
-}
+    .comment__container:not(:first-child) {
+    margin-left: 3rem;
+    margin-top: 1rem;
+    }
 
-.comment__card {
-  padding: 20px;
-  background-color: white;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  border-radius: 0.5rem;
-  min-width: 100%;
-}
+    .comment__card {
+    padding: 20px;
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 0.5rem;
+    min-width: 100%;
+    margin: 10px;
+    }
 
-.comment__card h3,
-.comment__card p {
-  margin-bottom: 2rem;
-}
+    .comment__card h3,
+    .comment__card p {
+    margin-bottom: 2rem;
+    }
 
-.comment__card-footer {
-  display: flex;
-  font-size: 0.85rem;
-  opacity: 0.6;
-  justify-content: flex-end;
-  align-items: center;
-  cursor: pointer;
-  gap: 20px;
-}
+    .comment__card-footer {
+    display: flex;
+    font-size: 0.85rem;
+    opacity: 0.6;
+    justify-content: flex-end;
+    align-items: center;
+    cursor: pointer;
+    gap: 20px;
+    }
 
-.show-replies,
-.hover_like,
-{
-  cursor: pointer;
-}
-div#social-links {
-    display: inline-block;
-    margin: 0;
-    margin-bottom: 15px;
-}
-div#social-links a{
-    /* padding: 20px; */
-    /* margin: 10px; */
-    font-size: 30px
-}
-
+    .show-replies,
+    .hover_like,
+    {
+    cursor: pointer;
+    }
+    div#social-links {
+        display: inline-block;
+        margin: 0;
+        margin-bottom: 15px;
+    }
+    div#social-links a{
+        font-size: 30px;
+    }
 </style>
 <body>
     @include('includes.nav-home')
@@ -93,7 +90,6 @@ div#social-links a{
                     </form>
                 @endif
             @endif
-
             {!! $share !!}
             <div @auth onclick="event.preventDefault(); document.getElementById('like-{{ $post->id }}').submit();" @endauth>
                     <p class="hover_like">
@@ -119,11 +115,19 @@ div#social-links a{
                <div class="hstack gap-2 mb-1">
                   <a class="fw-bold link-dark">{{ auth()->user()->name }}</a>
                </div>
+               {{-- komen 1 --}}
                <form action="{{ route('post.comment',$post->slug) }}" method="post" onsubmit="dis()" id="form-comment" class="form-floating mb-3">
                 @csrf
                 @method('put')
-                    <textarea class="form-control w-100" placeholder="Leave a comment here" id="my-comment" style="height:7rem;" name="content">{{ old('content') }}</textarea>
-                <label for="my-comment">Leave a comment here</label>
+                    <textarea class="form-control w-100" placeholder="Leave a comment here" 
+                    id="my-comment" 
+                    style="height:7rem;" 
+                    name="content" 
+                    maxlength="255" 
+                    oninput="document.getElementById('counter_comment').textContent = (255 - this.value.length) + ' karakter tersisa'"
+                    >{{ old('content') }}</textarea>
+                    <div id="counter_comment"></div>
+                    <label for="my-comment">Leave a comment here</label>
                     <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
                     <input type="hidden" name="post_id" value="{{ $post->id }}">
                     <input type="hidden" name="parent_id" value="{{ $parent_id ?? null }}">
@@ -136,7 +140,6 @@ div#social-links a{
         @endauth
         <h3>Comment : <hr></h3>
         @foreach ($comments as $comment)
-        {{-- {{ $comment }} --}}
         <div class="container__">
             @if ($comment->parent_id == null)
             <div class="comment__container opened" id="comment-{{ $comment->id }}">
@@ -146,10 +149,14 @@ div#social-links a{
                             <img src="{{ ($comment->user->pp == null) ? asset('images/null.jfif') : asset('storage/images/'.$comment->user->pp) }}" class="rounded-circle" width="5%"> 
                             &nbsp; {{ $comment->user->name }}
                         </span>
-                        <span class="fs-6"> - {{ $comment->created_at->diffForHumans() }}
+                        <span class="fs-5">
+                             - {{ $comment->created_at->diffForHumans() }}
+                        </span>
+                        <span class="fs-6">
+                            {{ ($comment->created_at == $comment->updated_at) ? '' : '(edited)' }}
                         </span>
                     </div>
-                    <p>{{ $comment->content }}</p>
+                    <p class="text-break">{{ $comment->content }}</p>
                     <div class="comment__card-footer">
                         @auth
                         @if ($comment->user->name == auth()->user()->name)
@@ -171,11 +178,19 @@ div#social-links a{
                         <div class="show-replies">Show Reply</div>
                     </div>
                     <div class="collapse" id="editComment{{ $comment->id }}">
+                        {{-- update --}}
                         <form action="{{ route('post.comment.update', ['comment' => $comment->id]) }}" method="POST">
                           @csrf
                           @method('PUT')
                           <div class="mb-3">
-                            <textarea class="form-control" id="content" name="content" class="form-control">{{ $comment->content }}</textarea>
+                            <textarea 
+                            class="form-control" 
+                            id="content" 
+                            name="content" 
+                            class="form-control" 
+                            oninput="document.getElementById('counter_edit{{ $comment->id }}').textContent = (255 - this.value.length) + ' karakter tersisa'"
+                            >{{ $comment->content }}</textarea>
+                            <div id="counter_edit{{ $comment->id }}"></div>
                           </div>
                           @error('content')
                             <span class="invalid-feedback" role="alert">
@@ -186,15 +201,22 @@ div#social-links a{
                           <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
                           @endauth
                           <input type="hidden" name="post_id" value="{{ $post->id }}">
-                          <button type="submit" class="btn btn-primary">Update</button>
+                          <button type="submit" class="btn btn-primary">Updates</button>
                         </form>
                     </div>
+                    {{-- reply comment --}}
                     <div class="collapse" id="replyComment{{ $comment->id }}">
                         <form action="{{ route('post.comment', ['post' => $post->slug]) }}" method="POST">
                           @csrf
                           @method('PUT')
                           <div class="mb-3">
-                            <textarea autofocus class="form-control" id="content" name="content">{{ __('@:username ', ['username' => $comment->user->name]) }}</textarea>
+                            <textarea 
+                            class="form-control" 
+                            id="content" 
+                            name="content"
+                            oninput="document.getElementById('counter_reply_comment{{ $comment->id }}').textContent = (255 - this.value.length) + ' karakter tersisa'"
+                            >{{ __('@:username ', ['username' => $comment->user->name]) }}</textarea>
+                            <div id="counter_reply_comment{{ $comment->id }}"></div>
                           </div>
                           @error('content')
                             <span class="invalid-feedback" role="alert">
@@ -219,9 +241,14 @@ div#social-links a{
                                 <img src="{{ ($reply->user->pp == null) ? asset('images/null.jfif') : asset('storage/images/'.$reply->user->pp) }}" class="rounded-circle" width="5%"> 
                                 &nbsp; {{ $reply->user->name }}
                             </span> 
-                            <span class="fs-6"> - {{ $reply->created_at->diffForHumans() }}</span>
+                            <span class="fs-5">
+                                - {{ $reply->created_at->diffForHumans() }}
+                            </span>
+                            <span class="fs-6">
+                                {{ ($reply->created_at == $reply->updated_at) ? '' : '(edited)' }}
+                            </span>
                         </div>
-                        <p>{{ $reply->content }}</p>
+                        <p class="text-break">{{ $reply->content }}</p>
                         <div class="comment__card-footer">
                             @auth
                             @if ($reply->user->name == auth()->user()->name)
@@ -243,11 +270,15 @@ div#social-links a{
                             <div class="show-replies">Show Reply</div>
                         </div>
                         <div class="collapse" id="editReplyComment{{ $reply->id }}">
+                            {{-- update --}}
                             <form action="{{ route('post.comment.update', ['comment' => $reply->id]) }}" method="POST">
                               @csrf
                               @method('PUT')
                               <div class="mb-3">
-                                <textarea class="form-control" id="content" name="content" class="form-control"> {{ $reply->content }}</textarea>
+                                <textarea class="form-control" id="content" name="content" class="form-control"
+                                oninput="document.getElementById('update_reply_counter_{{ $reply->id }}').textContent = (255 - this.value.length) + ' karakter tersisa'"
+                                >{{ $reply->content }}</textarea>
+                                <div id="update_reply_counter_{{ $reply->id }}"></div>
                               </div>
                               @error('content')
                                 <span class="invalid-feedback" role="alert">
@@ -261,12 +292,16 @@ div#social-links a{
                               <button type="submit" class="btn btn-primary">Update</button>
                             </form>
                         </div>
+                        {{-- reply --}}
                         <div class="collapse" id="replyReplyComment{{ $reply->id }}">
                             <form action="{{ route('post.comment', ['post' => $post->slug]) }}" method="POST">
                               @csrf
                               @method('PUT')
                               <div class="mb-3">
-                                <textarea autofocus class="form-control" id="content" name="content">{{ __('@:username ', ['username' => $reply->user->name]) }}</textarea>
+                                <textarea autofocus class="form-control" id="content" name="content" 
+                                oninput="document.getElementById('reply_reply_counter_{{ $reply->id }}').textContent = (255 - this.value.length) + ' karakter tersisa'"
+                                >{{ __('@:username ', ['username' => $reply->user->name]) }}</textarea>
+                                <div id="reply_reply_counter_{{ $reply->id }}"></div>
                               </div>
                               @error('content')
                                 <span class="invalid-feedback" role="alert">
@@ -291,11 +326,14 @@ div#social-links a{
                                         <img src="{{ ($reply2->user->pp == null) ? asset('images/null.jfif') : asset('storage/images/'.$reply2->user->pp) }}" class="rounded-circle" width="5%"> 
                                         &nbsp; {{ $reply2->user->name }}
                                     </span> 
+                                    <span class="fs-5">
+                                        - {{ $reply2->created_at->diffForHumans() }}
+                                    </span>
                                     <span class="fs-6">
-                                         - {{ $reply2->created_at->diffForHumans() }}
+                                        {{ ($reply2->created_at == $reply2->updated_at) ? '' : '(edited)' }}
                                     </span>
                                     </div>
-                                <p>{{ $reply2->content }}</p>
+                                <p class="text-break">{{ $reply2->content }}</p>
                                 <div class="comment__card-footer">
                                     @auth
                                     @if ($reply2->user->name == auth()->user()->name)
@@ -312,12 +350,14 @@ div#social-links a{
                                     @endif
                                     @endauth
                                 </div>
+                                {{-- edit --}}
                                 <div class="collapse" id="editReplyReplyComment{{ $reply2->id }}">
                                     <form action="{{ route('post.comment.update', ['comment' => $reply2->id]) }}" method="POST">
                                       @csrf
                                       @method('PUT')
                                       <div class="mb-3">
-                                        <textarea class="form-control" id="content" name="content" class="form-control">{{ $reply2->content }}</textarea>
+                                        <textarea class="form-control" id="content" name="content" class="form-control" oninput="document.getElementById('edit_reply_reply_counter_{{ $reply2->id }}').textContent = (255 - this.value.length) + ' karakter tersisa'">{{ $reply2->content }}</textarea>
+                                        <div id="edit_reply_reply_counter_{{ $reply2->id }}"></div>
                                       </div>
                                       @error('content')
                                         <span class="invalid-feedback" role="alert">
@@ -363,6 +403,7 @@ div#social-links a{
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+<script src="{{ asset('js/share.js') }}"></script>
 <script>
     function dis() {
         document.getElementById('btn-submit').setAttribute('disabled', true);
@@ -380,4 +421,10 @@ div#social-links a{
         }
     })
     );
+    function countWords() {
+        const input = document.getElementById("my-comment");
+        const counter = document.getElementById("counter");
+        const sisa = 255 - input.value.length;
+        counter.textContent = sisa + " karakter tersisa";
+    }
 </script>
