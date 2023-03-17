@@ -78,15 +78,15 @@
             </div>
             @if (auth()->check())
                 @if (auth()->user()->postSaves->contains('post_id', $post->id))
-                    <form action="{{ route('post-saves.destroy', ['post' => $post->id]) }}" method="POST" >
+                    <form action="{{ route('post-saves.destroy', ['post' => $post->id]) }}" method="POST" id="post-delete-{{ $post->id }}">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-secondary btn-sm" >Unsave</button>
+                        <button type="submit" class="btn btn-secondary btn-sm" onclick="this.disabled=true; document.getElementById('post-delete-{{ $post->id }}').submit();">Unsave</button>
                     </form>
                 @else
-                    <form action="{{ route('post-saves.store', ['post' => $post->id]) }}" method="POST">
+                    <form action="{{ route('post-saves.store', ['post' => $post->id]) }}" method="POST" id="post-saves-{{$post->id}}">
                         @csrf
-                        <button type="submit" class="btn btn-secondary btn-sm">Save</button>
+                        <button type="submit" class="btn btn-secondary btn-sm" onclick="this.disabled=true; document.getElementById('post-saves-{{$post->id}}').submit();">Save</button>
                     </form>
                 @endif
             @endif
@@ -132,7 +132,7 @@
                     <input type="hidden" name="post_id" value="{{ $post->id }}">
                     <input type="hidden" name="parent_id" value="{{ $parent_id ?? null }}">
                     <div class="hstack justify-content-end my-2">
-                        <button class="btn btn-md btn-primary" type="submit">Send</button>
+                        <button class="btn btn-md btn-primary" type="submit" onclick="this.disabled=true; document.getElementById('form-comment').submit();">Send</button>
                     </div>
                 </form>
             </div>
@@ -151,9 +151,6 @@
                         </span>
                         <span class="fs-5">
                              - {{ $comment->created_at->diffForHumans() }}
-                        </span>
-                        <span class="fs-6">
-                            {{ ($comment->created_at == $comment->updated_at) ? '' : '(edited)' }}
                         </span>
                     </div>
                     <p class="text-break">{{ $comment->content }}</p>
@@ -179,7 +176,7 @@
                     </div>
                     <div class="collapse" id="editComment{{ $comment->id }}">
                         {{-- update --}}
-                        <form action="{{ route('post.comment.update', ['comment' => $comment->id]) }}" method="POST">
+                        <form action="{{ route('post.comment.update', ['comment' => $comment->id]) }}" method="POST" id="comment-update-{{ $comment->id }}">
                           @csrf
                           @method('PUT')
                           <div class="mb-3">
@@ -188,6 +185,7 @@
                             id="content" 
                             name="content" 
                             class="form-control" 
+                            maxlength="255" 
                             oninput="document.getElementById('counter_edit{{ $comment->id }}').textContent = (255 - this.value.length) + ' karakter tersisa'"
                             >{{ $comment->content }}</textarea>
                             <div id="counter_edit{{ $comment->id }}"></div>
@@ -201,12 +199,12 @@
                           <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
                           @endauth
                           <input type="hidden" name="post_id" value="{{ $post->id }}">
-                          <button type="submit" class="btn btn-primary">Updates</button>
+                          <button type="submit" class="btn btn-primary" onclick="this.disabled=true; document.getElementById('comment-update-{{ $comment->id }}').submit();">Update</button>
                         </form>
                     </div>
                     {{-- reply comment --}}
                     <div class="collapse" id="replyComment{{ $comment->id }}">
-                        <form action="{{ route('post.comment', ['post' => $post->slug]) }}" method="POST">
+                        <form action="{{ route('post.comment', ['post' => $post->slug]) }}" method="POST" id="comment-reply-{{ $comment->id }}">
                           @csrf
                           @method('PUT')
                           <div class="mb-3">
@@ -214,6 +212,7 @@
                             class="form-control" 
                             id="content" 
                             name="content"
+                            maxlength="255" 
                             oninput="document.getElementById('counter_reply_comment{{ $comment->id }}').textContent = (255 - this.value.length) + ' karakter tersisa'"
                             >{{ __('@:username ', ['username' => $comment->user->name]) }}</textarea>
                             <div id="counter_reply_comment{{ $comment->id }}"></div>
@@ -228,7 +227,7 @@
                           @endauth
                           <input type="hidden" name="post_id" value="{{ $post->id }}">
                           <input type="hidden" name="parent_id" value="{{ $comment->id }}">
-                          <button type="submit" class="btn btn-primary">Send</button>
+                          <button type="submit" class="btn btn-primary" onclick="this.disabled=true; document.getElementById('comment-reply-{{ $comment->id }}').submit();">Send</button>
                         </form>
                     </div>
                 </div>
@@ -243,9 +242,6 @@
                             </span> 
                             <span class="fs-5">
                                 - {{ $reply->created_at->diffForHumans() }}
-                            </span>
-                            <span class="fs-6">
-                                {{ ($reply->created_at == $reply->updated_at) ? '' : '(edited)' }}
                             </span>
                         </div>
                         <p class="text-break">{{ $reply->content }}</p>
@@ -271,11 +267,11 @@
                         </div>
                         <div class="collapse" id="editReplyComment{{ $reply->id }}">
                             {{-- update --}}
-                            <form action="{{ route('post.comment.update', ['comment' => $reply->id]) }}" method="POST">
+                            <form action="{{ route('post.comment.update', ['comment' => $reply->id]) }}" method="POST" id="comment-reply-update-{{ $reply->id }}">
                               @csrf
                               @method('PUT')
                               <div class="mb-3">
-                                <textarea class="form-control" id="content" name="content" class="form-control"
+                                <textarea class="form-control" id="content" name="content" class="form-control" maxlength="255" 
                                 oninput="document.getElementById('update_reply_counter_{{ $reply->id }}').textContent = (255 - this.value.length) + ' karakter tersisa'"
                                 >{{ $reply->content }}</textarea>
                                 <div id="update_reply_counter_{{ $reply->id }}"></div>
@@ -289,16 +285,16 @@
                               <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
                               @endauth
                               <input type="hidden" name="post_id" value="{{ $post->id }}">
-                              <button type="submit" class="btn btn-primary">Update</button>
+                              <button type="submit" class="btn btn-primary" onclick="this.disabled=true; document.getElementById('comment-reply-update-{{ $reply->id }}').submit();">Update</button>
                             </form>
                         </div>
                         {{-- reply --}}
                         <div class="collapse" id="replyReplyComment{{ $reply->id }}">
-                            <form action="{{ route('post.comment', ['post' => $post->slug]) }}" method="POST">
+                            <form action="{{ route('post.comment', ['post' => $post->slug]) }}" method="POST" id="comment-reply-reply-{{ $reply->id }}">
                               @csrf
                               @method('PUT')
                               <div class="mb-3">
-                                <textarea autofocus class="form-control" id="content" name="content" 
+                                <textarea autofocus class="form-control" id="content" name="content" maxlength="255" 
                                 oninput="document.getElementById('reply_reply_counter_{{ $reply->id }}').textContent = (255 - this.value.length) + ' karakter tersisa'"
                                 >{{ __('@:username ', ['username' => $reply->user->name]) }}</textarea>
                                 <div id="reply_reply_counter_{{ $reply->id }}"></div>
@@ -313,7 +309,7 @@
                               @endauth
                               <input type="hidden" name="post_id" value="{{ $post->id }}">
                               <input type="hidden" name="parent_id" value="{{ $reply->id }}">
-                              <button type="submit" class="btn btn-primary">Send</button>
+                              <button type="submit" class="btn btn-primary" onclick="this.disabled=true; document.getElementById('comment-reply-reply-{{ $reply->id }}').submit();">Send</button>
                             </form>
                         </div>
                     </div>
@@ -328,9 +324,6 @@
                                     </span> 
                                     <span class="fs-5">
                                         - {{ $reply2->created_at->diffForHumans() }}
-                                    </span>
-                                    <span class="fs-6">
-                                        {{ ($reply2->created_at == $reply2->updated_at) ? '' : '(edited)' }}
                                     </span>
                                     </div>
                                 <p class="text-break">{{ $reply2->content }}</p>
@@ -352,11 +345,11 @@
                                 </div>
                                 {{-- edit --}}
                                 <div class="collapse" id="editReplyReplyComment{{ $reply2->id }}">
-                                    <form action="{{ route('post.comment.update', ['comment' => $reply2->id]) }}" method="POST">
+                                    <form action="{{ route('post.comment.update', ['comment' => $reply2->id]) }}" method="POST" id="comment-reply2-{{$reply2->id}}">
                                       @csrf
                                       @method('PUT')
                                       <div class="mb-3">
-                                        <textarea class="form-control" id="content" name="content" class="form-control" oninput="document.getElementById('edit_reply_reply_counter_{{ $reply2->id }}').textContent = (255 - this.value.length) + ' karakter tersisa'">{{ $reply2->content }}</textarea>
+                                        <textarea class="form-control" id="content" name="content" maxlength="255" class="form-control" oninput="document.getElementById('edit_reply_reply_counter_{{ $reply2->id }}').textContent = (255 - this.value.length) + ' karakter tersisa'">{{ $reply2->content }}</textarea>
                                         <div id="edit_reply_reply_counter_{{ $reply2->id }}"></div>
                                       </div>
                                       @error('content')
@@ -368,7 +361,7 @@
                                       <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
                                       @endauth
                                       <input type="hidden" name="post_id" value="{{ $post->id }}">
-                                      <button type="submit" class="btn btn-primary">Update</button>
+                                      <button type="submit" class="btn btn-primary" onclick="this.disabled=true; document.getElementById('comment-reply2-{{$reply2->id}}').submit();">Update</button>
                                     </form>
                                 </div>
                             </div>

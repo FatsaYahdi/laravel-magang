@@ -89,7 +89,22 @@ class PostShowController extends Controller
 
     public function delete($comment)
     {
-        Comment::destroy($comment);
+        $find = Comment::find($comment);
+        if ($find->parent_id === null) {
+            Comment::where('parent_id', $find->id)->update(['parent_id' => null]);
+        } else {
+            $parentComment = Comment::find($find->parent_id);
+    
+            if ($parentComment->parent_id === null) {
+                Comment::where('parent_id', $find->id)->update(['parent_id' => $parentComment->id]);
+            } else {
+                $grandparentComment = Comment::find($parentComment->parent_id);
+                Comment::where('parent_id', $find->id)->update(['parent_id' => $grandparentComment->id]);
+            }
+            $find->parent_id = null;
+            $find->save();
+        }
+        $find->delete();
         return redirect()->back();
     }
 }
